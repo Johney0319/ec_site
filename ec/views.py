@@ -70,6 +70,10 @@ class ProductListView(ListView):
             print(product_list)
         return product_list
 
+# 商品詳細用
+class ProductDetailView(DetailView):
+    model = Jackets
+    template_name = "product_detail.html"
 
 # 商品削除用
 def product_delete(request):

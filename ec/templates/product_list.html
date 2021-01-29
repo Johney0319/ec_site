@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ja" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>商品一覧画面</title>
@@ -11,7 +11,7 @@
     <button type="submit">検索</button>
 </form>
 {% for form in product_list %}
-    <img src="{{ form.jacket_image.url }}" style="width:300px;height:300px">
+    <a href="{% url 'ec:product_detail' form.pk %}"><img src="{{ form.jacket_image.url }}" style="width:300px;height:300px"></a>
     <p>{{ form.jacket_bland }}</p>
 {% endfor %}
 </body>
