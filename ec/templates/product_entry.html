@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>商品登録画面</title>
+</head>
+<body>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <p>ジャケット<br></p>
+    <p1>商品名：<br>
+        {{ form.jacket_name }}<br></p1>
+    <p1>価格(税抜)：<br>
+        {{ form.jacket_price }}<br></p1>
+    <p1>サイズ：<br>
+        {{ form.jacket_size }}<br></p1>
+    <p1>M or W：<br>
+        {{ form.jacket_sex }}<br></p1>
+    <p1>ブランド名：<br>
+        {{ form.jacket_bland }}<br></p1>
+    <p1>商品画像：<br>
+        {{ form.jacket_image }}<br></p1>
+
+    <input type="submit" value="登録">
+</form>
+</body>
+</html>

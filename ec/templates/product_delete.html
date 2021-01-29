@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商品削除画面</title>
+</head>
+<body>
+<form method="POST" novalidate>
+    {% csrf_token %}
+    <label>ジャケットID<input type="text" name="jacket_id"></label>
+    <button type="submit">削除</button>
+</form>
+</body>
+</html>
