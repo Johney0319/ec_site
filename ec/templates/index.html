@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% extends 'base.html' %}
 <html lang="ja">
+{% block content %}
 <head>
     <meta charset="UTF-8">
     <title>ファッション通販サイト</title>
@@ -8,6 +10,10 @@
 <a href="{% url 'ec:product_entry' %}"><p>商品登録する</p></a>
 <a href="{% url 'ec:product_delete' %}"><p>商品削除する</p></a>
 <hr>
-<a href="{% url 'ec:product_list' %}"><p>ジャケット</p></a>
+<a href="{% url 'ec:jackets_list' %}"><p>ジャケット</p></a>
+<a href="{% url 'ec:shirts_list' %}"><p>シャツ</p></a>
+<a href="{% url 'ec:pants_list' %}"><p>パンツ</p></a>
+<a href="{% url 'ec:shoes_list' %}"><p>靴</p></a>
 </body>
+{% endblock %}
 </html>

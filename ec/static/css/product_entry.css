@@ -1,0 +1,19 @@
+.productContainer {
+  overflow: hidden;
+}
+
+.jackets {
+  float: left;
+}
+
+.shirts {
+  float: left;
+}
+
+.pants {
+  float: left;
+}
+
+.shoes {
+  float: left;
+}

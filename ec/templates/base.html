@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="ja">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+</head>
+<body>
+<div class="baseContainer">
+    <div class="background-black"></div>
+    <div class="contents">
+        <a href="{% url 'ec:index' %}"><h1 class="title">ファッション通販サイト</h1></a>
+        <p class="login">ログイン</p>
+    </div>
+</div>
+<hr>
+{% block content %}{% endblock %}
+</body>
+</html>

@@ -1,12 +1,15 @@
 <!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <title>商品詳細画面</title>
+    <title>商品詳細画面(ジャケット)</title>
 </head>
 <body>
 <table border="1">
     <tr>
+        <th>商品ID</th>
         <th>商品名</th>
         <th>価格(税抜)</th>
         <th>サイズ</th>
@@ -14,6 +17,7 @@
         <th>ブランド名</th>
     </tr>
     <tr>
+        <td>{{ jackets.jacket_id }}</td>
         <td>{{ jackets.jacket_name }}</td>
         <td>{{ jackets.jacket_price }}</td>
         <td>{{ jackets.jacket_size }}</td>
@@ -23,4 +27,5 @@
 </table>
 <h1>カートに入れる</h1>
 </body>
+{% endblock %}
 </html>

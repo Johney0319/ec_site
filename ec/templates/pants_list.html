@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+<html lang="ja" xmlns="http://www.w3.org/1999/html">
+{% load static %}
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/product_list.css' %}">
+    <title>商品一覧画面(パンツ)</title>
+</head>
+<body>
+<form method="get">
+    {% csrf_token %}
+    <p>ブランド名検索：<input name="pant_bland_icon" value="{{ request.GET.query }}" type="text"></p>
+    <p>価格範囲検索：<input name="min_price" value="{{ request.GET.query }}" type="number">円 ~
+        <input name="max_price" value="{{ request.GET.query }}" type="number">円</p>
+    <button type="submit">検索</button>
+</form>
+<div class="productContainer">
+    {% for form in pants_list %}
+    <div class="product">
+        <a href="{% url 'ec:pants_detail' form.pk %}"><img src="{{ form.pant_image.url }}" style="width:300px;height:300px"></a>
+        <p class="productBland">{{ form.pant_bland }}</p>
+        <p class="productPrice">¥ {{ form.pant_price }}</p>
+    </div>
+    {% endfor %}
+</div>
+</body>
+{% endblock %}
+</html>

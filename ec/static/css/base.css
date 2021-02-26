@@ -1,0 +1,28 @@
+.baseContainer {
+  position: relative;
+  width: 100%;
+}
+
+.background-black {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+  background: black;
+}
+
+.contents {
+  position: relative;
+  overflow: hidden;
+}
+
+.title {
+  color: white;
+  float: left;
+}
+
+.login {
+  color: white;
+  float: left;
+  margin-left: 1000px;
+}

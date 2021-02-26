@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>商品詳細画面(靴)</title>
+</head>
+<body>
+<table border="1">
+    <tr>
+        <th>商品ID</th>
+        <th>商品名</th>
+        <th>価格(税抜)</th>
+        <th>サイズ</th>
+        <th>M or W</th>
+        <th>ブランド名</th>
+    </tr>
+    <tr>
+        <td>{{ shoes.shoe_id }}</td>
+        <td>{{ shoes.shoe_name }}</td>
+        <td>{{ shoes.shoe_price }}</td>
+        <td>{{ shoes.shoe_size }}</td>
+        <td>{{ shoes.shoe_sex }}</td>
+        <td>{{ shoes.shoe_bland }}</td>
+    </tr>
+</table>
+<h1>カートに入れる</h1>
+</body>
+{% endblock %}
+</html>

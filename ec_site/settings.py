@@ -130,3 +130,8 @@ STATIC_URL = '/static/'
 # 画像保存先の指定
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
+
+# staticの読み込み
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]

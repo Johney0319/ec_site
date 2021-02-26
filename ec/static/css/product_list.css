@@ -1,0 +1,15 @@
+.productContainer {
+  overflow: hidden;
+}
+
+.product {
+  float: left;
+}
+
+.productBland {
+  margin-left: 100px;
+}
+
+.productPrice {
+  margin-left: 100px;
+}

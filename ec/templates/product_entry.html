@@ -1,27 +1,93 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="ja">
+{% load static %}
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/product_entry.css' %}">
     <title>商品登録画面</title>
 </head>
 <body>
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
-    <p>ジャケット<br></p>
-    <p1>商品名：<br>
-        {{ form.jacket_name }}<br></p1>
-    <p1>価格(税抜)：<br>
-        {{ form.jacket_price }}<br></p1>
-    <p1>サイズ：<br>
-        {{ form.jacket_size }}<br></p1>
-    <p1>M or W：<br>
-        {{ form.jacket_sex }}<br></p1>
-    <p1>ブランド名：<br>
-        {{ form.jacket_bland }}<br></p1>
-    <p1>商品画像：<br>
-        {{ form.jacket_image }}<br></p1>
+<div class="productContainer">
+    <div class="jackets">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>ジャケット<br></p>
+            <p1>商品名：<br>
+                {{ jackets_form.jacket_name }}<br></p1>
+            <p1>価格(税抜)：<br>
+                {{ jackets_form.jacket_price }}<br></p1>
+            <p1>サイズ：<br>
+                {{ jackets_form.jacket_size }}<br></p1>
+            <p1>M or W：<br>
+                {{ jackets_form.jacket_sex }}<br></p1>
+            <p1>ブランド名：<br>
+                {{ jackets_form.jacket_bland }}<br></p1>
+            <p1>商品画像：<br>
+                {{ jackets_form.jacket_image }}<br></p1>
 
-    <input type="submit" value="登録">
-</form>
+            <input type="submit" value="登録">
+        </form>
+    </div>
+    <div class="shirts">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>シャツ<br></p>
+            <p1>商品名：<br>
+                {{ shirts_form.shirt_name }}<br></p1>
+            <p1>価格(税抜)：<br>
+                {{ shirts_form.shirt_price }}<br></p1>
+            <p1>サイズ：<br>
+                {{ shirts_form.shirt_size }}<br></p1>
+            <p1>M or W：<br>
+                {{ shirts_form.shirt_sex }}<br></p1>
+            <p1>ブランド名：<br>
+                {{ shirts_form.shirt_bland }}<br></p1>
+            <p1>商品画像：<br>
+                {{ shirts_form.shirt_image }}<br></p1>
+
+            <input type="submit" value="登録">
+        </form>
+    </div>
+    <div class="pants">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>パンツ<br></p>
+            <p1>商品名：<br>
+                {{ pants_form.pant_name }}<br></p1>
+            <p1>価格(税抜)：<br>
+                {{ pants_form.pant_price }}<br></p1>
+            <p1>サイズ：<br>
+                {{ pants_form.pant_size }}<br></p1>
+            <p1>M or W：<br>
+                {{ pants_form.pant_sex }}<br></p1>
+            <p1>ブランド名：<br>
+                {{ pants_form.pant_bland }}<br></p1>
+            <p1>商品画像：<br>
+                {{ pants_form.pant_image }}<br></p1>
+
+            <input type="submit" value="登録">
+        </form>
+    </div>
+    <div class="shoes">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>靴<br></p>
+            <p1>商品名：<br>
+                {{ shoes_form.shoe_name }}<br></p1>
+            <p1>価格(税抜)：<br>
+                {{ shoes_form.shoe_price }}<br></p1>
+            <p1>サイズ：<br>
+                {{ shoes_form.shoe_size }}<br></p1>
+            <p1>M or W：<br>
+                {{ shoes_form.shoe_sex }}<br></p1>
+            <p1>ブランド名：<br>
+                {{ shoes_form.shoe_bland }}<br></p1>
+            <p1>商品画像：<br>
+                {{ shoes_form.shoe_image }}<br></p1>
+
+            <input type="submit" value="登録">
+        </form>
+    </div>
+</div>
 </body>
 </html>
