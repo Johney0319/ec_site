@@ -135,3 +135,9 @@ MEDIA_URL = '/media/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+AUTH_USER_MODEL = 'ec.CustomUser'
+
+LOGIN_URL = 'login'
+LOGIN_REDIRECT_URL = 'ec:index'
+LOGOUT_REDIRECT_URL = 'login'

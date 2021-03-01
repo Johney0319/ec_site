@@ -24,5 +24,11 @@
 .login {
   color: white;
   float: left;
-  margin-left: 1000px;
+  margin-left: 950px;
+}
+
+.logout {
+  color: white;
+  float: left;
+  margin-left: 950px;
 }

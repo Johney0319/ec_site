@@ -7,9 +7,11 @@
     <title>ファッション通販サイト</title>
 </head>
 <body>
+{% if user.is_superuser %}
 <a href="{% url 'ec:product_entry' %}"><p>商品登録する</p></a>
 <a href="{% url 'ec:product_delete' %}"><p>商品削除する</p></a>
 <hr>
+{% endif %}
 <a href="{% url 'ec:jackets_list' %}"><p>ジャケット</p></a>
 <a href="{% url 'ec:shirts_list' %}"><p>シャツ</p></a>
 <a href="{% url 'ec:pants_list' %}"><p>パンツ</p></a>

@@ -10,7 +10,11 @@
     <div class="background-black"></div>
     <div class="contents">
         <a href="{% url 'ec:index' %}"><h1 class="title">ファッション通販サイト</h1></a>
-        <p class="login">ログイン</p>
+        {% if user.is_superuser %}
+        <a href="{% url 'logout' %}"><p class="logout">ログアウト</p></a>
+        {% else %}
+        <a href="{% url 'ec:login_success' %}"><p class="login">ログイン</p></a>
+        {% endif %}
     </div>
 </div>
 <hr>

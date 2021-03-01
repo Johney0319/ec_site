@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+{% extends 'base.html' %}
 <html lang="ja">
+{% block content %}
 {% load static %}
 <head>
     <meta charset="UTF-8">
@@ -22,6 +24,8 @@
                 {{ jackets_form.jacket_sex }}<br></p1>
             <p1>ブランド名：<br>
                 {{ jackets_form.jacket_bland }}<br></p1>
+            <p1>在庫数：<br>
+                {{ jackets_form.jacket_stock }}<br></p1>
             <p1>商品画像：<br>
                 {{ jackets_form.jacket_image }}<br></p1>
 
@@ -42,6 +46,8 @@
                 {{ shirts_form.shirt_sex }}<br></p1>
             <p1>ブランド名：<br>
                 {{ shirts_form.shirt_bland }}<br></p1>
+            <p1>在庫数：<br>
+                {{ shirts_form.shirt_stock }}<br></p1>
             <p1>商品画像：<br>
                 {{ shirts_form.shirt_image }}<br></p1>
 
@@ -62,6 +68,8 @@
                 {{ pants_form.pant_sex }}<br></p1>
             <p1>ブランド名：<br>
                 {{ pants_form.pant_bland }}<br></p1>
+            <p1>在庫数：<br>
+                {{ pants_form.pant_stock }}<br></p1>
             <p1>商品画像：<br>
                 {{ pants_form.pant_image }}<br></p1>
 
@@ -82,6 +90,8 @@
                 {{ shoes_form.shoe_sex }}<br></p1>
             <p1>ブランド名：<br>
                 {{ shoes_form.shoe_bland }}<br></p1>
+            <p1>在庫数：<br>
+                {{ shoes_form.shoe_stock }}<br></p1>
             <p1>商品画像：<br>
                 {{ shoes_form.shoe_image }}<br></p1>
 
@@ -90,4 +100,5 @@
     </div>
 </div>
 </body>
+{% endblock %}
 </html>

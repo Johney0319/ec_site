@@ -15,6 +15,7 @@
         <th>サイズ</th>
         <th>M or W</th>
         <th>ブランド名</th>
+        <th>在庫数</th>
     </tr>
     <tr>
         <td>{{ pants.pant_id }}</td>
@@ -23,8 +24,10 @@
         <td>{{ pants.pant_size }}</td>
         <td>{{ pants.pant_sex }}</td>
         <td>{{ pants.pant_bland }}</td>
+        <td>{{ pants.pant_stock }}</td>
     </tr>
 </table>
+<img src="{{ pants.pant_image.url }}" style="width:300px;height:auto">
 <h1>カートに入れる</h1>
 </body>
 {% endblock %}

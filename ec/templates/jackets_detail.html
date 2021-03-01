@@ -15,6 +15,7 @@
         <th>サイズ</th>
         <th>M or W</th>
         <th>ブランド名</th>
+        <th>在庫数</th>
     </tr>
     <tr>
         <td>{{ jackets.jacket_id }}</td>
@@ -23,8 +24,10 @@
         <td>{{ jackets.jacket_size }}</td>
         <td>{{ jackets.jacket_sex }}</td>
         <td>{{ jackets.jacket_bland }}</td>
+        <td>{{ jackets.jacket_stock }}</td>
     </tr>
 </table>
+<img src="{{ jackets.jacket_image.url }}" style="width:300px;height:auto">
 <h1>カートに入れる</h1>
 </body>
 {% endblock %}

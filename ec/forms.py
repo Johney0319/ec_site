@@ -21,6 +21,8 @@ BLAND_CHOICES = (
     ('HAGE', 'HAGE'),
     ('PACOSTE', 'PACOSTE'),
     ('SZUDIOUS', 'SZUDIOUS'),
+    ('Grocky Monkey', 'Grocky Monkey'),
+    ('IDONM', 'IDONM'),
 )
 
 class JacketsForm(forms.Form):
@@ -39,6 +41,7 @@ class JacketsForm(forms.Form):
     jacket_bland = forms.ChoiceField(
         choices=BLAND_CHOICES,
     )
+    jacket_stock = forms.CharField(max_length=3)
     jacket_image = forms.ImageField()
 
 class ShirtsForm(forms.Form):
@@ -57,6 +60,7 @@ class ShirtsForm(forms.Form):
     shirt_bland = forms.ChoiceField(
         choices=BLAND_CHOICES,
     )
+    shirt_stock = forms.CharField(max_length=3)
     shirt_image = forms.ImageField()
 
 class PantsForm(forms.Form):
@@ -75,6 +79,7 @@ class PantsForm(forms.Form):
     pant_bland = forms.ChoiceField(
         choices=BLAND_CHOICES,
     )
+    pant_stock = forms.CharField(max_length=3)
     pant_image = forms.ImageField()
 
 class ShoesForm(forms.Form):
@@ -93,6 +98,7 @@ class ShoesForm(forms.Form):
     shoe_bland = forms.ChoiceField(
         choices=BLAND_CHOICES,
     )
+    shoe_stock = forms.CharField(max_length=3)
     shoe_image = forms.ImageField()
 
 

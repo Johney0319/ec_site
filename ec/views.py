@@ -1,3 +1,5 @@
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Max, Q
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -6,7 +8,7 @@ from django.views import generic
 
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from .forms import JacketsForm, ShirtsForm, PantsForm, ShoesForm
-from .models import Jackets, Shirts, Pants, Shoes
+from .models import Jackets, Shirts, Pants, Shoes, CustomUser
 
 # Create your views here.
 
@@ -14,7 +16,14 @@ from .models import Jackets, Shirts, Pants, Shoes
 class IndexView(TemplateView):
     template_name = 'index.html'
 
+# ログイン用
+@login_required
+def login_success(request):
+
+    return render(request, 'login_success.html')
+
 # 商品登録画面用
+@login_required
 def product_entry(request):
     jackets_form = JacketsForm(request.POST, request.FILES)
     shirts_form = ShirtsForm(request.POST, request.FILES)
@@ -37,6 +46,7 @@ def product_entry(request):
         model.jacket_size = jackets_form.cleaned_data['jacket_size']
         model.jacket_sex = jackets_form.cleaned_data['jacket_sex']
         model.jacket_bland = jackets_form.cleaned_data['jacket_bland']
+        model.jacket_stock = jackets_form.cleaned_data['jacket_stock']
         model.jacket_image = jackets_form.cleaned_data['jacket_image']
 
         Jackets.objects.create(
@@ -46,6 +56,7 @@ def product_entry(request):
             jacket_size=model.jacket_size,
             jacket_sex=model.jacket_sex,
             jacket_bland=model.jacket_bland,
+            jacket_stock=model.jacket_stock,
             jacket_image=model.jacket_image,
         )
         return redirect('ec:jackets_list')
@@ -66,6 +77,7 @@ def product_entry(request):
         model.shirt_size = shirts_form.cleaned_data['shirt_size']
         model.shirt_sex = shirts_form.cleaned_data['shirt_sex']
         model.shirt_bland = shirts_form.cleaned_data['shirt_bland']
+        model.shirt_stock = shirts_form.cleaned_data['shirt_stock']
         model.shirt_image = shirts_form.cleaned_data['shirt_image']
 
         Shirts.objects.create(
@@ -75,6 +87,7 @@ def product_entry(request):
             shirt_size=model.shirt_size,
             shirt_sex=model.shirt_sex,
             shirt_bland=model.shirt_bland,
+            shirt_stock=model.shirt_stock,
             shirt_image=model.shirt_image,
         )
         return redirect('ec:shirts_list')
@@ -95,6 +108,7 @@ def product_entry(request):
         model.pant_size = pants_form.cleaned_data['pant_size']
         model.pant_sex = pants_form.cleaned_data['pant_sex']
         model.pant_bland = pants_form.cleaned_data['pant_bland']
+        model.pant_stock = pants_form.cleaned_data['pant_stock']
         model.pant_image = pants_form.cleaned_data['pant_image']
 
         Pants.objects.create(
@@ -104,6 +118,7 @@ def product_entry(request):
             pant_size=model.pant_size,
             pant_sex=model.pant_sex,
             pant_bland=model.pant_bland,
+            pant_stock=model.pant_stock,
             pant_image=model.pant_image,
         )
         return redirect('ec:pants_list')
@@ -124,6 +139,7 @@ def product_entry(request):
         model.shoe_size = shoes_form.cleaned_data['shoe_size']
         model.shoe_sex = shoes_form.cleaned_data['shoe_sex']
         model.shoe_bland = shoes_form.cleaned_data['shoe_bland']
+        model.shoe_stock = shoes_form.cleaned_data['shoe_stock']
         model.shoe_image = shoes_form.cleaned_data['shoe_image']
 
         Shoes.objects.create(
@@ -133,6 +149,7 @@ def product_entry(request):
             shoe_size=model.shoe_size,
             shoe_sex=model.shoe_sex,
             shoe_bland=model.shoe_bland,
+            shoe_stock=model.shoe_stock,
             shoe_image=model.shoe_image,
         )
         return redirect('ec:shoes_list')

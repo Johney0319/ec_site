@@ -5,6 +5,7 @@ from . import views
 app_name = 'ec'
 urlpatterns = [
     path('', views.IndexView.as_view(), name='index'),
+    path('login_success/', views.login_success, name='login_success'),
     path('product_entry/', views.product_entry, name='product_entry'),
     path('jackets_list/', views.JacketsListView.as_view(), name='jackets_list'),
     path('shirts_list/', views.ShirtsListView.as_view(), name='shirts_list'),

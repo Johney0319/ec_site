@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
 
@@ -9,6 +10,7 @@ class Jackets(models.Model):
     jacket_size = models.CharField(max_length=2)
     jacket_sex = models.CharField(max_length=5)
     jacket_bland = models.CharField(max_length=30)
+    jacket_stock = models.CharField(max_length=3)
     jacket_image = models.ImageField(upload_to='images/')
 
 class Shirts(models.Model):
@@ -18,6 +20,7 @@ class Shirts(models.Model):
     shirt_size = models.CharField(max_length=2)
     shirt_sex = models.CharField(max_length=5)
     shirt_bland = models.CharField(max_length=30)
+    shirt_stock = models.CharField(max_length=3)
     shirt_image = models.ImageField(upload_to='images/')
 
 class Pants(models.Model):
@@ -27,6 +30,7 @@ class Pants(models.Model):
     pant_size = models.CharField(max_length=2)
     pant_sex = models.CharField(max_length=5)
     pant_bland = models.CharField(max_length=30)
+    pant_stock = models.CharField(max_length=3)
     pant_image = models.ImageField(upload_to='images/')
 
 class Shoes(models.Model):
@@ -36,5 +40,9 @@ class Shoes(models.Model):
     shoe_size = models.CharField(max_length=2)
     shoe_sex = models.CharField(max_length=5)
     shoe_bland = models.CharField(max_length=30)
+    shoe_stock = models.CharField(max_length=3)
     shoe_image = models.ImageField(upload_to='images/')
+
+class CustomUser(AbstractUser):
+    age = models.IntegerField(null=True)
 
