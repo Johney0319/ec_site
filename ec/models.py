@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
@@ -46,3 +48,14 @@ class Shoes(models.Model):
 class CustomUser(AbstractUser):
     age = models.IntegerField(null=True)
 
+class Cart(models.Model):
+    cart_id = models.CharField(max_length=250, blank=True)
+    date_added = models.DateField(auto_now_add=True)
+
+class CartItem(models.Model):
+    jackets = models.ForeignKey(Jackets, on_delete=models.CASCADE, null=True)
+    shirts = models.ForeignKey(Shirts, on_delete=models.CASCADE, null=True)
+    pants = models.ForeignKey(Pants, on_delete=models.CASCADE, null=True)
+    shoes = models.ForeignKey(Shoes, on_delete=models.CASCADE, null=True)
+    cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
+    quantity = models.IntegerField()

@@ -11,7 +11,7 @@
     <tr>
         <th>商品ID</th>
         <th>商品名</th>
-        <th>価格(税抜)</th>
+        <th>価格(税込)</th>
         <th>サイズ</th>
         <th>M or W</th>
         <th>ブランド名</th>
@@ -28,7 +28,7 @@
     </tr>
 </table>
 <img src="{{ shoes.shoe_image.url }}" style="width:300px;height:auto">
-<h1>カートに入れる</h1>
+<a href="{% url 'ec:add_cart_shoes' shoes.id %}"><h1>カートに入れる</h1></a>
 </body>
 {% endblock %}
 </html>

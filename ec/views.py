@@ -2,13 +2,12 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Max, Q
 from django.shortcuts import render, redirect
-from django.urls import reverse_lazy
-
-from django.views import generic
+import datetime
 
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from .forms import JacketsForm, ShirtsForm, PantsForm, ShoesForm
-from .models import Jackets, Shirts, Pants, Shoes, CustomUser
+from .models import Jackets, Shirts, Pants, Shoes, CustomUser, Cart, CartItem
+
 
 # Create your views here.
 
@@ -21,6 +20,84 @@ class IndexView(TemplateView):
 def login_success(request):
 
     return render(request, 'login_success.html')
+
+# カート機能用 (一覧表示)
+class CartListView(ListView):
+    model = Cart
+    template_name = "cart_list.html"
+    context_object_name = 'cart_list'
+
+    def get_context_data(self, **kwargs):
+        cartItme_list = super(CartListView, self).get_context_data(**kwargs)
+
+        cartItme_list.update({
+            'cartItem_list': CartItem.objects.all()
+        })
+
+        return cartItme_list
+
+    def get_queryset(self):
+        return Cart.objects.all()
+
+#class CartItemListView(ListView):
+#    model = CartItem
+#    template_name = "cart_list.html"
+#    context_object_name = 'cartItem_list'
+
+#    cartItem_list = CartItem.objects.all()
+
+# カート機能用 (追加)
+def add_cart(request, id):
+    model = Cart()
+    jackets = None
+    shirts = None
+    pants = None
+    shoes = None
+
+    now_date = datetime.datetime.now()
+
+    pre_path = request.get_full_path
+    if 'jackets' in str(pre_path):
+        jackets = Jackets.objects.get(id=id)
+    elif 'shirts' in str(pre_path):
+        shirts = Shirts.objects.get(id=id)
+    elif 'pants' in str(pre_path):
+        pants = Pants.objects.get(id=id)
+    elif 'shoes' in str(pre_path):
+        shoes = Shoes.objects.get(id=id)
+
+    cart = Cart.objects.create(
+        cart_id=request.user,
+        date_added=now_date
+    )
+
+    CartItem.objects.create(
+        jackets=jackets,
+        shirts=shirts,
+        pants=pants,
+        shoes=shoes,
+        quantity=1,
+        cart=cart
+    )
+
+#    try:
+#        cart = Cart.objects.get(cart_id=cart_id(request))
+#        print(cart)
+#    except Cart.DoesNotExist:
+
+#        cart.save()
+#    try:
+#        cart_item = CartItem.objects.get(jackets=jackets, cart=cart)
+#        cart_item.quantity += 1
+#        cart_item.save()
+#    except CartItem.DoesNotExist:
+#        cart_item = CartItem.objects.create(
+#                jackets = jackets,
+#                quantity = 1,
+#                cart = cart
+#            )
+#        cart_item.save()
+    return redirect('ec:cart_list')
 
 # 商品登録画面用
 @login_required
@@ -323,6 +400,8 @@ def product_delete(request):
         Shirts.objects.all().delete()
         Pants.objects.all().delete()
         Shoes.objects.all().delete()
+        Cart.objects.all().delete()
+        CartItem.objects.all().delete()
         # jacket_id = request.POST.get('jacket_id')
         # Jackets.objects.filter(jacket_id=request.POST.get('jacket_id')).delete()
         # Management.objects.filter(id=request.POST.get('id')).delete()
