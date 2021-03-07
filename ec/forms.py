@@ -101,6 +101,8 @@ class ShoesForm(forms.Form):
     shoe_stock = forms.CharField(max_length=3)
     shoe_image = forms.ImageField()
 
+class CartListForm(forms.Form):
+    purchase_num = forms.CharField(max_length=3)
 
 
 
