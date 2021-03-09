@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+<html lang="ja">
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>購入確認画面</title>
+</head>
+<body>
+<p>合計：¥ {{ purchase_price_sum }} (税込)</p>
+<p>(消費税額：¥ {{ purchase_price_sum_tax }})</p>
+<a href="{% url 'ec:purchase_history' %}"><p>購入する</p></a>
+<hr>
+{% for cart in cart_all %}
+<table border="1">
+    <tr>
+        <th>商品ID</th>
+        <th>商品名</th>
+        <th>価格(税込)</th>
+        <th>サイズ</th>
+        <th>M or W</th>
+        <th>ブランド名</th>
+        <th></th>
+        <th>購入個数</th>
+    </tr>
+    {% if cart.jackets is not None %}
+    <tr>
+        <td>{{ cart.jackets.jacket_id }}</td>
+        <td>{{ cart.jackets.jacket_name }}</td>
+        <td>{{ cart.jackets.jacket_price }}</td>
+        <td>{{ cart.jackets.jacket_size }}</td>
+        <td>{{ cart.jackets.jacket_sex }}</td>
+        <td>{{ cart.jackets.jacket_bland }}</td>
+        <td></td>
+        <td>{{ cart.quantity }}</td>
+    </tr>
+    {% elif cart.shirts is not None %}
+    <tr>
+        <td>{{ cart.shirts.shirt_id }}</td>
+        <td>{{ cart.shirts.shirt_name }}</td>
+        <td>{{ cart.shirts.shirt_price }}</td>
+        <td>{{ cart.shirts.shirt_size }}</td>
+        <td>{{ cart.shirts.shirt_sex }}</td>
+        <td>{{ cart.shirts.shirt_bland }}</td>
+        <td></td>
+        <td>{{ cart.quantity }}</td>
+    </tr>
+    {% elif cart.pants is not None %}
+    <tr>
+        <td>{{ cart.pants.pant_id }}</td>
+        <td>{{ cart.pants.pant_name }}</td>
+        <td>{{ cart.pants.pant_price }}</td>
+        <td>{{ cart.pants.pant_size }}</td>
+        <td>{{ cart.pants.pant_sex }}</td>
+        <td>{{ cart.pants.pant_bland }}</td>
+        <td></td>
+        <td>{{ cart.quantity }}</td>
+    </tr>
+    {% elif cart.shoes is not None %}
+    <tr>
+        <td>{{ cart.shoes.shoe_id }}</td>
+        <td>{{ cart.shoes.shoe_name }}</td>
+        <td>{{ cart.shoes.shoe_price }}</td>
+        <td>{{ cart.shoes.shoe_size }}</td>
+        <td>{{ cart.shoes.shoe_sex }}</td>
+        <td>{{ cart.shoes.shoe_bland }}</td>
+        <td></td>
+        <td>{{ cart.quantity }}</td>
+    </tr>
+    {% endif %}
+</table>
+<img src="{{ cart.jackets.jacket_image.url }}" style="width:300px;height:auto">
+<img src="{{ cart.shirts.shirt_image.url }}" style="width:300px;height:auto">
+<img src="{{ cart.pants.pant_image.url }}" style="width:300px;height:auto">
+<img src="{{ cart.shoes.shoe_image.url }}" style="width:300px;height:auto">
+<hr>
+{% endfor %}
+</body>
+{% endblock %}
+</html>

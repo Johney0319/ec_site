@@ -59,3 +59,12 @@ class CartItem(models.Model):
     shoes = models.ForeignKey(Shoes, on_delete=models.CASCADE, null=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
     quantity = models.IntegerField()
+
+class PurchaseHistory(models.Model):
+    purchase_user = models.CharField(max_length=250, blank=True)
+    date_added = models.DateField(auto_now_add=True)
+    quantity = models.IntegerField(default=1)
+    jackets_history = models.ForeignKey(Jackets, on_delete=models.CASCADE, null=True)
+    shirts_history = models.ForeignKey(Shirts, on_delete=models.CASCADE, null=True)
+    pants_history = models.ForeignKey(Pants, on_delete=models.CASCADE, null=True)
+    shoes_history = models.ForeignKey(Shoes, on_delete=models.CASCADE, null=True)

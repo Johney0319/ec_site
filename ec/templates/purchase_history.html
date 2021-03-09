@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+<html lang="ja">
+{% block content %}
+<head>
+    <meta charset="UTF-8">
+    <title>購入履歴画面</title>
+</head>
+<body>
+{% for purchase in purchase_history %}
+<table border="1">
+    <tr>
+        <th>ユーザー名</th>
+        <th>商品ID</th>
+        <th>商品名</th>
+        <th>価格(税込)</th>
+        <th>サイズ</th>
+        <th>M or W</th>
+        <th>ブランド名</th>
+        <th></th>
+        <th>購入個数</th>
+    </tr>
+    {% if purchase.jackets_history is not None %}
+    <tr>
+        <td>{{ purchase.purchase_user }}</td>
+        <td>{{ purchase.jackets_history.jacket_id }}</td>
+        <td>{{ purchase.jackets_history.jacket_name }}</td>
+        <td>{{ purchase.jackets_history.jacket_price }}</td>
+        <td>{{ purchase.jackets_history.jacket_size }}</td>
+        <td>{{ purchase.jackets_history.jacket_sex }}</td>
+        <td>{{ purchase.jackets_history.jacket_bland }}</td>
+        <td></td>
+        <td>{{ purchase.quantity }}</td>
+    </tr>
+    {% elif purchase.shirts_history is not None %}
+    <tr>
+        <td>{{ purchase.purchase_user }}</td>
+        <td>{{ purchase.shirts_history.shirt_id }}</td>
+        <td>{{ purchase.shirts_history.shirt_name }}</td>
+        <td>{{ purchase.shirts_history.shirt_price }}</td>
+        <td>{{ purchase.shirts_history.shirt_size }}</td>
+        <td>{{ purchase.shirts_history.shirt_sex }}</td>
+        <td>{{ purchase.shirts_history.shirt_bland }}</td>
+        <td></td>
+        <td>{{ purchase.quantity }}</td>
+    </tr>
+    {% elif purchase.pants_history is not None %}
+    <tr>
+        <td>{{ purchase.purchase_user }}</td>
+        <td>{{ purchase.pants_history.pant_id }}</td>
+        <td>{{ purchase.pants_history.pant_name }}</td>
+        <td>{{ purchase.pants_history.pant_price }}</td>
+        <td>{{ purchase.pants_history.pant_size }}</td>
+        <td>{{ purchase.pants_history.pant_sex }}</td>
+        <td>{{ purchase.pants_history.pant_bland }}</td>
+        <td></td>
+        <td>{{ purchase.quantity }}</td>
+    </tr>
+    {% elif purchase.shoes_history is not None %}
+    <tr>
+        <td>{{ purchase.purchase_user }}</td>
+        <td>{{ purchase.shoes_history.shoe_id }}</td>
+        <td>{{ purchase.shoes_history.shoe_name }}</td>
+        <td>{{ purchase.shoes_history.shoe_price }}</td>
+        <td>{{ purchase.shoes_history.shoe_size }}</td>
+        <td>{{ purchase.shoes_history.shoe_sex }}</td>
+        <td>{{ purchase.shoes_history.shoe_bland }}</td>
+        <td></td>
+        <td>{{ purchase.quantity }}</td>
+    </tr>
+    {% endif %}
+</table>
+<img src="{{ purchase.jackets_history.jacket_image.url }}" style="width:300px;height:auto">
+<img src="{{ purchase.shirts_history.shirt_image.url }}" style="width:300px;height:auto">
+<img src="{{ purchase.pants_history.pant_image.url }}" style="width:300px;height:auto">
+<img src="{{ purchase.shoes_history.shoe_image.url }}" style="width:300px;height:auto">
+<hr>
+{% endfor %}
+</body>
+{% endblock %}
+</html>

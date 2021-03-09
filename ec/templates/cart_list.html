@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
-<html lang="ja" xmlns="http://www.w3.org/1999/html">
+<html lang="ja">
 {% load static %}
 {% block content %}
 <head>
@@ -18,7 +18,6 @@
         <th>サイズ</th>
         <th>M or W</th>
         <th>ブランド名</th>
-        <th>購入日付</th>
         <th></th>
         <th>購入個数</th>
     </tr>
@@ -30,7 +29,6 @@
         <td>{{ form.jackets.jacket_size }} {{ form.shirts.shirt_size }} {{ form.pants.pant_size }} {{ form.shoes.shoe_size }}</td>
         <td>{{ form.jackets.jacket_sex }} {{ form.shirts.shirt_sex }} {{ form.pants.pant_sex }} {{ form.shoes.shoe_sex }}</td>
         <td>{{ form.jackets.jacket_bland }} {{ form.shirts.shirt_bland }} {{ form.pants.pant_bland }} {{ form.shoes.shoe_bland }}</td>
-        <td>{{ form.cart.date_added }}</td>
         <td></td>
         <td><a href="{% url 'ec:update_cart' form.id %}">{{ form.quantity }}</a></td>
         <td><a href="{% url 'ec:delete_cart' form.id %}">カートから削除</a></td>
@@ -44,12 +42,14 @@
 {% endfor %}
 
 {% if cart_list_form is not None %}
-<form method="post"enctype="multipart/form-data">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ cart_list_form.purchase_num }}
     <input type="submit" value="変更">
 </form>
 {% endif %}
+
+<a href="{% url 'ec:purchase' %}">レジへ進む</a>
 </body>
 {% endblock %}
 </html>

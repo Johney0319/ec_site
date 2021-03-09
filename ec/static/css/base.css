@@ -29,11 +29,17 @@
 
 .logout {
   color: white;
-  float: left;
+  float: left
   margin-left: 950px;
 }
 
 .cart {
-  float: left;
+  color: white;
   margin-left: 900px;
+}
+
+.purchase_history {
+  color: history;
+  float: left;
+  margin-left: 850px;
 }

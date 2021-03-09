@@ -3,10 +3,10 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Max, Q
 from django.shortcuts import render, redirect, get_object_or_404
 import datetime
-
+import math
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from .forms import JacketsForm, ShirtsForm, PantsForm, ShoesForm, CartListForm
-from .models import Jackets, Shirts, Pants, Shoes, CustomUser, Cart, CartItem
+from .models import Jackets, Shirts, Pants, Shoes, CustomUser, Cart, CartItem, PurchaseHistory
 
 # メイン画面用
 class IndexView(TemplateView):
@@ -44,29 +44,29 @@ def delete_cart(request, id):
         jackets = get_object_or_404(Jackets, jacket_id=cart_list_info.jackets.jacket_id)
 
         # 該当製品の在庫の再計算
-        jackets.jacket_stock = int(jackets.jacket_stock) + int(cart_list_info.quantity)
-        jackets.save()
+        #jackets.jacket_stock = int(jackets.jacket_stock) + int(cart_list_info.quantity)
+        #jackets.save()
 
     elif cart_list_info.shirts is not None:
         shirts = get_object_or_404(Shirts, shirt_id=cart_list_info.shirts.shirt_id)
 
         # 該当製品の在庫の再計算
-        shirts.shirt_stock = int(shirts.shirt_stock) + int(cart_list_info.quantity)
-        shirts.save()
+        #shirts.shirt_stock = int(shirts.shirt_stock) + int(cart_list_info.quantity)
+        #shirts.save()
 
     elif cart_list_info.pants is not None:
         pants = get_object_or_404(Pants, pant_id=cart_list_info.pants.pant_id)
 
         # 該当製品の在庫の再計算
-        pants.pant_stock = int(pants.pant_stock) + int(cart_list_info.quantity)
-        pants.save()
+        #pants.pant_stock = int(pants.pant_stock) + int(cart_list_info.quantity)
+        #pants.save()
 
     elif cart_list_info.shoes is not None:
         shoes = get_object_or_404(Shoes, shoe_id=cart_list_info.shoes.shoe_id)
 
         # 該当製品の在庫の再計算
-        shoes.shoe_stock = int(shoes.shoe_stock) + int(cart_list_info.quantity)
-        shoes.save()
+        #shoes.shoe_stock = int(shoes.shoe_stock) + int(cart_list_info.quantity)
+        #shoes.save()
 
     cart_list_info.delete()
 
@@ -84,11 +84,8 @@ def add_cart(request, id):
     pre_path = request.get_full_path
 
     if 'jackets' in str(pre_path):
-        # 在庫個数変更
+        # カートへ該当商品を追加
         jackets = get_object_or_404(Jackets, id=id)
-        jacket_stock_now = int(jackets.jacket_stock) - 1
-        jackets.jacket_stock = jacket_stock_now
-
         jackets.save()
 
         # カート内にすでに同じ製品があればその購入個数を増やす
@@ -106,8 +103,8 @@ def add_cart(request, id):
 
     elif 'shirts' in str(pre_path):
         shirts = get_object_or_404(Shirts, id=id)
-        shirts_stock_now = int(shirts.shirt_stock) - 1
-        shirts.shirt_stock = shirts_stock_now
+        #shirts_stock_now = int(shirts.shirt_stock) - 1
+        #shirts.shirt_stock = shirts_stock_now
 
         shirts.save()
 
@@ -126,8 +123,8 @@ def add_cart(request, id):
 
     elif 'pants' in str(pre_path):
         pants = get_object_or_404(Pants, id=id)
-        pants_stock_now = int(pants.pant_stock) - 1
-        pants.pant_stock = pants_stock_now
+        #pants_stock_now = int(pants.pant_stock) - 1
+        #pants.pant_stock = pants_stock_now
 
         pants.save()
 
@@ -144,11 +141,10 @@ def add_cart(request, id):
 
                     return redirect('ec:cart_list')
 
-
     elif 'shoes' in str(pre_path):
         shoes = get_object_or_404(Shoes, id=id)
-        shoes_stock_now = int(shoes.shoe_stock) - 1
-        shoes.shoe_stock = shoes_stock_now
+        #shoes_stock_now = int(shoes.shoe_stock) - 1
+        #shoes.shoe_stock = shoes_stock_now
 
         shoes.save()
 
@@ -195,13 +191,13 @@ def update_cart(request, id):
 
                 return redirect('ec:cart_list')
 
-            # 変更個数が在庫数以下だったら購入個数と在庫数を再計算
+            # 変更個数が在庫数以下だったら購入個数を変更
             else:
-                jackets_list_info.jacket_stock = int(jackets_list_info.jacket_stock) + int(cart_list_info.quantity) - int(cart_list_form.cleaned_data['purchase_num'])
+                #jackets_list_info.jacket_stock = int(jackets_list_info.jacket_stock) + int(cart_list_info.quantity) - int(cart_list_form.cleaned_data['purchase_num'])
                 cart_list_info.quantity = cart_list_form.cleaned_data['purchase_num']
 
                 cart_list_info.save()
-                jackets_list_info.save()
+                #jackets_list_info.save()
 
                 return redirect('ec:cart_list')
 
@@ -214,13 +210,13 @@ def update_cart(request, id):
 
                 return redirect('ec:cart_list')
 
-            # 変更個数が在庫数以下だったら購入個数と在庫数を再計算
+            # 変更個数が在庫数以下だったら購入個数を変更
             else:
-                shirts_list_info.shirt_stock = int(shirts_list_info.shirt_stock) + int(cart_list_info.quantity) - int(cart_list_form.cleaned_data['purchase_num'])
+                #shirts_list_info.shirt_stock = int(shirts_list_info.shirt_stock) + int(cart_list_info.quantity) - int(cart_list_form.cleaned_data['purchase_num'])
                 cart_list_info.quantity = cart_list_form.cleaned_data['purchase_num']
 
                 cart_list_info.save()
-                shirts_list_info.save()
+                #shirts_list_info.save()
 
                 return redirect('ec:cart_list')
 
@@ -233,13 +229,13 @@ def update_cart(request, id):
 
                 return redirect('ec:cart_list')
 
-            # 変更個数が在庫数以下だったら購入個数と在庫数を再計算
+            # 変更個数が在庫数以下だったら購入個数を変更
             else:
-                pants_list_info.pant_stock = int(pants_list_info.pant_stock) + int(cart_list_info.quantity) - int(cart_list_form.cleaned_data['purchase_num'])
+                #pants_list_info.pant_stock = int(pants_list_info.pant_stock) + int(cart_list_info.quantity) - int(cart_list_form.cleaned_data['purchase_num'])
                 cart_list_info.quantity = cart_list_form.cleaned_data['purchase_num']
 
                 cart_list_info.save()
-                pants_list_info.save()
+                #pants_list_info.save()
 
                 return redirect('ec:cart_list')
 
@@ -252,13 +248,13 @@ def update_cart(request, id):
 
                 return redirect('ec:cart_list')
 
-            # 変更個数が在庫数以下だったら購入個数と在庫数を再計算
+            # 変更個数が在庫数以下だったら購入個数を変更
             else:
-                shoes_list_info.shoe_stock = int(shoes_list_info.shoe_stock) + int(cart_list_info.quantity) - int(cart_list_form.cleaned_data['purchase_num'])
+                #shoes_list_info.shoe_stock = int(shoes_list_info.shoe_stock) + int(cart_list_info.quantity) - int(cart_list_form.cleaned_data['purchase_num'])
                 cart_list_info.quantity = cart_list_form.cleaned_data['purchase_num']
 
                 cart_list_info.save()
-                shoes_list_info.save()
+                #shoes_list_info.save()
 
                 return redirect('ec:cart_list')
 
@@ -267,6 +263,66 @@ def update_cart(request, id):
     }
 
     return render(request, 'cart_list.html', params)
+
+# 購入機能用
+def purchase(request):
+    cart_all = CartItem.objects.all()
+    purchase_price_sum = []
+
+    for cart in cart_all:
+        if cart.jackets is not None:
+            cart_jackets_sum = int(cart.jackets.jacket_price) * int(cart.quantity)
+            purchase_price_sum.append(cart_jackets_sum)
+
+        elif cart.shirts is not None:
+            cart_shirts_sum = int(cart.shirts.shirt_price) * int(cart.quantity)
+            purchase_price_sum.append(cart_shirts_sum)
+
+        elif cart.pants is not None:
+            cart_pants_sum = int(cart.pants.pant_price) * int(cart.quantity)
+            purchase_price_sum.append(cart_pants_sum)
+
+        elif cart.shoes is not None:
+            cart_shoes_sum = int(cart.shoes.shoe_price) * int(cart.quantity)
+            purchase_price_sum.append(cart_shoes_sum)
+
+    params = {
+        'purchase_price_sum': sum(purchase_price_sum),
+        'purchase_price_sum_tax': math.floor(sum(purchase_price_sum) * 0.1),
+        'cart_all': cart_all
+    }
+
+    return render(request, 'purchase.html', params)
+
+# 購入履歴機能用
+def purchase_history(request):
+    cartItem_all = CartItem.objects.all()
+    date_now = datetime.datetime.now()
+
+    for item in cartItem_all:
+        purchase_user = item.cart.cart_id
+        quantity = item.quantity
+
+        PurchaseHistory.objects.create(
+            purchase_user=purchase_user,
+            date_added=date_now,
+            quantity=quantity,
+            jackets_history=item.jackets,
+            shirts_history=item.shirts,
+            pants_history=item.pants,
+            shoes_history=item.shoes
+        )
+
+    purchase_history_all = PurchaseHistory.objects.all()
+
+    Cart.objects.all().delete()
+    CartItem.objects.all().delete()
+
+    params = {
+        'purchase_history': purchase_history_all
+    }
+
+    return render(request, 'purchase_history.html', params)
 
 # 商品登録画面用
 @login_required
@@ -571,6 +627,7 @@ def product_delete(request):
         Shoes.objects.all().delete()
         Cart.objects.all().delete()
         CartItem.objects.all().delete()
+        PurchaseHistory.objects.all().delete()
 
         return redirect('ec:index')
 

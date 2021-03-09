@@ -11,7 +11,8 @@
     <div class="contents">
         <a href="{% url 'ec:index' %}"><h1 class="title">ファッション通販サイト</h1></a>
         {% if user.is_superuser %}
-        <a href="{% url 'ec:cart_list' %}"><img class="cart" src="{% static 'icon/サンプルカート.png' %}" style="width:40px;height:auto"></a>
+        <a href="{% url 'ec:cart_list' %}"><p class="cart">カート</p></a>
+        <a href="{% url 'ec:purchase_history' %}"><p class="purchase_history">購入履歴</p></a>
         <a href="{% url 'logout' %}"><p class="logout">ログアウト</p></a>
         {% else %}
         <a href="{% url 'ec:login_success' %}"><p class="login">ログイン</p></a>
