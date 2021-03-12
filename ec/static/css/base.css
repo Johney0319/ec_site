@@ -1,45 +1,26 @@
-.baseContainer {
-  position: relative;
-  width: 100%;
+header {
+  display: flex;
+  align-items: center;
+  background-color: black;
 }
 
-.background-black {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 100%;
-  background: black;
+a {
+  text-decoration: none;
 }
 
-.contents {
-  position: relative;
-  overflow: hidden;
+ui {
+  list-style: none;
+  display: flex;
 }
 
-.title {
+li {
+  margin-right: 15px;
+}
+
+nav {
+  margin-left: auto;
+}
+
+.header_obj {
   color: white;
-  float: left;
-}
-
-.login {
-  color: white;
-  float: left;
-  margin-left: 950px;
-}
-
-.logout {
-  color: white;
-  float: left
-  margin-left: 950px;
-}
-
-.cart {
-  color: white;
-  margin-left: 900px;
-}
-
-.purchase_history {
-  color: history;
-  float: left;
-  margin-left: 850px;
 }

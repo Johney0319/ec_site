@@ -1,0 +1,16 @@
+.productsContainer {
+  overflow: hidden
+}
+
+.productsObject {
+  float: left;
+}
+
+.products_table {
+  display: flex;
+  flex-direction: column;
+}
+
+td, p {
+  text-align: center;
+}

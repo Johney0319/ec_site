@@ -1,14 +1,23 @@
 <!DOCTYPE html>
 <html lang="ja">
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
     <title>ログイン画面</title>
 </head>
 <body>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">ログイン</button>
-</form>
+<h2>- ログイン -</h2>
+<div class="login_form">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="ログイン">
+        <a href="{% url 'ec:user_entry' %}"><p>新規ユーザー登録はこちらから</p></a>
+    </form>
+</div>
 </body>
+{% endblock %}
 </html>

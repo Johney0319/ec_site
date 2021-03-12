@@ -1,16 +1,52 @@
-from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.db.models import Max, Q
-from django.shortcuts import render, redirect, get_object_or_404
 import datetime
 import math
+import re
+from django.contrib.auth.decorators import login_required
+from django.db.models import Max, Q
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
-from .forms import JacketsForm, ShirtsForm, PantsForm, ShoesForm, CartListForm
+from .forms import JacketsForm, ShirtsForm, PantsForm, ShoesForm, CartListForm, SignUpForm
 from .models import Jackets, Shirts, Pants, Shoes, CustomUser, Cart, CartItem, PurchaseHistory
 
 # メイン画面用
 class IndexView(TemplateView):
     template_name = 'index.html'
+
+# ユーザー新規登録用
+class UserCreateView(CreateView):
+    template_name = 'user_entry.html'
+    form_class = SignUpForm
+
+    def form_valid(self, form_class):
+        entry_user = CustomUser(username=self.request.POST.get('username'))
+        entry_password = CustomUser(username=self.request.POST.get('password'))
+
+        # ユーザー名が半角アルファベット、半角数字、@/./+/-/_ で150文字以下の条件に合わない場合
+        if int(len(str(entry_user))) > 150 or bool(re.search(r'[a-zA-Z0-9]', str(entry_user))) == False or ('@' not in str(entry_user) and '.' not in str(entry_user) and '+' not in str(entry_user) and '-' not in str(entry_user) and '_' not in str(entry_user)):
+            username_error = 'ユーザー名は半角アルファベット、半角数字、@/./+/-/_ で 150文字以下で入力してください。'
+            params = {
+                'username_error': username_error,
+                'form': form_class
+            }
+            return render(self.request, 'user_entry.html', params)
+
+        # パスワードが8文字以上で数字だけではない条件に合わない場合
+        if int(len(str(entry_password))) < 8 or str(entry_password).isdecimal() == True:
+            password_error = 'パスワードは 8文字以上で入力してください。' \
+                             '数字だけで入力しないでください。'
+            params = {
+                'password_error': password_error,
+                'form': form_class
+            }
+            return render(self.request, 'user_entry.html', params)
+
+        entry_user.set_password(self.request.POST.get('password'))
+        entry_user.save()
+
+        return redirect('ec:index')
+
+    success_url = reverse_lazy('ec:index')
 
 # ログイン用
 @login_required
@@ -23,15 +59,21 @@ class CartListView(ListView):
     model = Cart
     template_name = "cart_list.html"
     context_object_name = 'cart_list'
+    cart_all = None
 
     def get_context_data(self, **kwargs):
-        cartItme_list = super(CartListView, self).get_context_data(**kwargs)
+        cartItem_list = super(CartListView, self).get_context_data(**kwargs)
 
-        cartItme_list.update({
-            'cartItem_list': CartItem.objects.all()
+        if len(cartItem_list['object_list']) == 0:
+            cart_all = None
+        else:
+            cart_all = CartItem.objects.all()
+
+        cartItem_list.update({
+            'cartItem_list': cart_all
         })
 
-        return cartItme_list
+        return cartItem_list
 
     def get_queryset(self):
         return Cart.objects.all()
@@ -40,39 +82,12 @@ class CartListView(ListView):
 def delete_cart(request, id):
     cart_list_info = CartItem.objects.get(id=id)
 
-    if cart_list_info.jackets is not None:
-        jackets = get_object_or_404(Jackets, jacket_id=cart_list_info.jackets.jacket_id)
-
-        # 該当製品の在庫の再計算
-        #jackets.jacket_stock = int(jackets.jacket_stock) + int(cart_list_info.quantity)
-        #jackets.save()
-
-    elif cart_list_info.shirts is not None:
-        shirts = get_object_or_404(Shirts, shirt_id=cart_list_info.shirts.shirt_id)
-
-        # 該当製品の在庫の再計算
-        #shirts.shirt_stock = int(shirts.shirt_stock) + int(cart_list_info.quantity)
-        #shirts.save()
-
-    elif cart_list_info.pants is not None:
-        pants = get_object_or_404(Pants, pant_id=cart_list_info.pants.pant_id)
-
-        # 該当製品の在庫の再計算
-        #pants.pant_stock = int(pants.pant_stock) + int(cart_list_info.quantity)
-        #pants.save()
-
-    elif cart_list_info.shoes is not None:
-        shoes = get_object_or_404(Shoes, shoe_id=cart_list_info.shoes.shoe_id)
-
-        # 該当製品の在庫の再計算
-        #shoes.shoe_stock = int(shoes.shoe_stock) + int(cart_list_info.quantity)
-        #shoes.save()
-
     cart_list_info.delete()
 
     return redirect('ec:cart_list')
 
 # カート機能用 (追加)
+@login_required
 def add_cart(request, id):
     model = Cart()
     jackets = None
@@ -88,11 +103,11 @@ def add_cart(request, id):
         jackets = get_object_or_404(Jackets, id=id)
         jackets.save()
 
-        # カート内にすでに同じ製品があればその購入個数を増やす
+        # カート内に該当商品が存在しており、かつ、在庫数-購入個数 >= 1 であれば、購入個数を1増やす
         cart_product = CartItem.objects.all()
         for i in range(len(cart_product)):
             if cart_product[i].jackets is not None:
-                if cart_product[i].jackets.jacket_id == jackets.jacket_id:
+                if cart_product[i].jackets.jacket_id == jackets.jacket_id and int(jackets.jacket_stock) - int(cart_product[i].quantity) >= 1:
                     cart_jacket_duplicate = get_object_or_404(CartItem, jackets=jackets)
                     cart_jacket_duplicate_quantity = int(cart_jacket_duplicate.quantity) + 1
                     cart_jacket_duplicate.quantity = cart_jacket_duplicate_quantity
@@ -101,18 +116,18 @@ def add_cart(request, id):
 
                     return redirect('ec:cart_list')
 
+                else:
+                    return redirect('ec:index')
+
     elif 'shirts' in str(pre_path):
         shirts = get_object_or_404(Shirts, id=id)
-        #shirts_stock_now = int(shirts.shirt_stock) - 1
-        #shirts.shirt_stock = shirts_stock_now
-
         shirts.save()
 
-        # カート内にすでに同じ製品があればその購入個数を増やす
+        # カート内に該当商品が存在しており、かつ、在庫数-購入個数 >= 1 であれば、購入個数を1増やす
         cart_product = CartItem.objects.all()
         for i in range(len(cart_product)):
             if cart_product[i].shirts is not None:
-                if cart_product[i].shirts.shirt_id == shirts.shirt_id:
+                if cart_product[i].shirts.shirt_id == shirts.shirt_id and int(shirts.shirt_stock) - int(cart_product[i].quantity) >= 1:
                     cart_shirt_duplicate = get_object_or_404(CartItem, shirts=shirts)
                     cart_shirt_duplicate_quantity = int(cart_shirt_duplicate.quantity) + 1
                     cart_shirt_duplicate.quantity = cart_shirt_duplicate_quantity
@@ -123,16 +138,13 @@ def add_cart(request, id):
 
     elif 'pants' in str(pre_path):
         pants = get_object_or_404(Pants, id=id)
-        #pants_stock_now = int(pants.pant_stock) - 1
-        #pants.pant_stock = pants_stock_now
-
         pants.save()
 
-        # カート内にすでに同じ製品があればその購入個数を増やす
+        # カート内に該当商品が存在しており、かつ、在庫数-購入個数 >= 1 であれば、購入個数を1増やす
         cart_product = CartItem.objects.all()
         for i in range(len(cart_product)):
             if cart_product[i].pants is not None:
-                if cart_product[i].pants.pant_id == pants.pant_id:
+                if cart_product[i].pants.pant_id == pants.pant_id and int(pants.pant_stock) - int(cart_product[i].quantity) >= 1:
                     cart_pant_duplicate = get_object_or_404(CartItem, pants=pants)
                     cart_pant_duplicate_quantity = int(cart_pant_duplicate.quantity) + 1
                     cart_pant_duplicate.quantity = cart_pant_duplicate_quantity
@@ -143,16 +155,13 @@ def add_cart(request, id):
 
     elif 'shoes' in str(pre_path):
         shoes = get_object_or_404(Shoes, id=id)
-        #shoes_stock_now = int(shoes.shoe_stock) - 1
-        #shoes.shoe_stock = shoes_stock_now
-
         shoes.save()
 
-        # カート内にすでに同じ製品があればその購入個数を増やす
+        # カート内に該当商品が存在しており、かつ、在庫数-購入個数 >= 1 であれば、購入個数を1増やす
         cart_product = CartItem.objects.all()
         for i in range(len(cart_product)):
             if cart_product[i].shoes is not None:
-                if cart_product[i].shoes.shoe_id == shoes.shoe_id:
+                if cart_product[i].shoes.shoe_id == shoes.shoe_id and int(shoes.shoe_stock) - int(cart_product[i].quantity) >= 1:
                     cart_shoe_duplicate = get_object_or_404(CartItem, shoes=shoes)
                     cart_shoe_duplicate_quantity = int(cart_shoe_duplicate.quantity) + 1
                     cart_shoe_duplicate.quantity = cart_shoe_duplicate_quantity
@@ -265,26 +274,51 @@ def update_cart(request, id):
     return render(request, 'cart_list.html', params)
 
 # 購入機能用
+@login_required
 def purchase(request):
     cart_all = CartItem.objects.all()
     purchase_price_sum = []
 
     for cart in cart_all:
         if cart.jackets is not None:
+            # 購入価格合計
             cart_jackets_sum = int(cart.jackets.jacket_price) * int(cart.quantity)
             purchase_price_sum.append(cart_jackets_sum)
 
+            # 購入対象商品の在庫の再計算
+            jackets = get_object_or_404(Jackets, jacket_id=cart.jackets.jacket_id)
+            jackets.jacket_stock = int(jackets.jacket_stock) - int(cart.quantity)
+            jackets.save()
+
         elif cart.shirts is not None:
+            # 購入価格合計
             cart_shirts_sum = int(cart.shirts.shirt_price) * int(cart.quantity)
             purchase_price_sum.append(cart_shirts_sum)
 
+            # 購入対象商品の在庫の再計算
+            shirts = get_object_or_404(Shirts, shirt_id=cart.shirts.shirt_id)
+            shirts.shirt_stock = int(shirts.shirt_stock) - int(cart.quantity)
+            shirts.save()
+
         elif cart.pants is not None:
+            # 購入価格合計
             cart_pants_sum = int(cart.pants.pant_price) * int(cart.quantity)
             purchase_price_sum.append(cart_pants_sum)
 
+            # 購入対象商品の在庫の再計算
+            pants = get_object_or_404(Pants, pant_id=cart.pants.pant_id)
+            pants.pant_stock = int(pants.pant_stock) - int(cart.quantity)
+            pants.save()
+
         elif cart.shoes is not None:
+            # 購入価格合計
             cart_shoes_sum = int(cart.shoes.shoe_price) * int(cart.quantity)
             purchase_price_sum.append(cart_shoes_sum)
+
+            # 購入対象商品の在庫の再計算
+            shoes = get_object_or_404(Shoes, shoe_id=cart.shoes.shoe_id)
+            shoes.shoe_stock = int(shoes.shoe_stock) - int(cart.quantity)
+            shoes.save()
 
     params = {
         'purchase_price_sum': sum(purchase_price_sum),
@@ -295,6 +329,7 @@ def purchase(request):
     return render(request, 'purchase.html', params)
 
 # 購入履歴機能用
+@login_required
 def purchase_history(request):
     cartItem_all = CartItem.objects.all()
     date_now = datetime.datetime.now()
@@ -618,6 +653,7 @@ class ShoesDetailView(DetailView):
     template_name = "shoes_detail.html"
 
 # 商品削除用
+@login_required
 def product_delete(request):
 
     if request.method == 'POST':

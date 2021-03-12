@@ -8,6 +8,7 @@
     <title>カート内一覧表示画面</title>
 </head>
 <body>
+{% if cartItem_list is not None %}
 {% for form in cartItem_list %}
 <table border="1">
     <tr>
@@ -40,6 +41,11 @@
 <img src="{{ form.shoes.shoe_image.url }}" style="width:300px;height:auto">
 <hr>
 {% endfor %}
+<a href="{% url 'ec:purchase' %}">レジへ進む</a>
+
+{% elif cartItem_list is None and cart_list_form is None %}
+<p>カートの中に商品は入っていません。</p>
+{% endif %}
 
 {% if cart_list_form is not None %}
 <form method="post" enctype="multipart/form-data">
@@ -48,8 +54,6 @@
     <input type="submit" value="変更">
 </form>
 {% endif %}
-
-<a href="{% url 'ec:purchase' %}">レジへ進む</a>
 </body>
 {% endblock %}
 </html>

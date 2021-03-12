@@ -1,34 +1,45 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/products_detail.css' %}">
     <title>商品詳細画面(パンツ)</title>
 </head>
 <body>
-<table border="1">
-    <tr>
-        <th>商品ID</th>
-        <th>商品名</th>
-        <th>価格(税込)</th>
-        <th>サイズ</th>
-        <th>M or W</th>
-        <th>ブランド名</th>
-        <th>在庫数</th>
-    </tr>
-    <tr>
-        <td>{{ pants.pant_id }}</td>
-        <td>{{ pants.pant_name }}</td>
-        <td>{{ pants.pant_price }}</td>
-        <td>{{ pants.pant_size }}</td>
-        <td>{{ pants.pant_sex }}</td>
-        <td>{{ pants.pant_bland }}</td>
-        <td>{{ pants.pant_stock }}</td>
-    </tr>
-</table>
-<img src="{{ pants.pant_image.url }}" style="width:300px;height:auto">
-<a href="{% url 'ec:add_cart_pants' pants.id %}"><p>カートに入れる</p></a>
+<h2>- 商品詳細(パンツ) -</h2>
+<div class="productsContainer">
+    <img class="productsObject" src="{{ pants.pant_image.url }}" style="width:450px;height:auto">
+    <div class="products_table">
+        <table class="productsObject" border="1">
+            <tr>
+                <th>商品ID</th>
+                <th>商品名</th>
+                <th>価格(税込)</th>
+                <th>サイズ</th>
+                <th>M or W</th>
+                <th>ブランド名</th>
+                <th>在庫数</th>
+            </tr>
+            <tr>
+                <td>{{ pants.pant_id }}</td>
+                <td>{{ pants.pant_name }}</td>
+                <td>{{ pants.pant_price }}</td>
+                <td>{{ pants.pant_size }}</td>
+                <td>{{ pants.pant_sex }}</td>
+                <td>{{ pants.pant_bland }}</td>
+                <td>{{ pants.pant_stock }}</td>
+            </tr>
+        </table>
+        {% if pants.pant_stock != '0' %}
+        <a href="{% url 'ec:add_cart_pants' pants.id %}"><p>カートに入れる</p></a>
+        {% else %}
+        <p>完売</p>
+        {% endif %}
+    </div>
+</div>
 </body>
 {% endblock %}
 </html>

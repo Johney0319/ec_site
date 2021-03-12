@@ -1,5 +1,8 @@
 from django import forms
-from .models import Jackets
+from django.contrib.auth.forms import UserCreationForm
+from django.forms import ModelForm
+
+from .models import CustomUser
 from PIL import Image
 
 SEX_CHOICES = (
@@ -104,6 +107,9 @@ class ShoesForm(forms.Form):
 class CartListForm(forms.Form):
     purchase_num = forms.CharField(max_length=3)
 
+class SignUpForm(forms.ModelForm):
+    password = forms.CharField(max_length=50, widget=forms.PasswordInput())
 
-
-
+    class Meta:
+        model = CustomUser
+        fields = ['username', 'email', 'age', 'password']

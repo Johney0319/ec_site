@@ -1,11 +1,18 @@
 <!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/login_success.css' %}">
     <title>ログイン成功画面</title>
 </head>
 <body>
-<h1>ログインに成功しました。</h1>
-<a href="{% url 'ec:index' %}"><h1 class="title">メイン画面へ</h1></a>
+<div class="login_success">
+    <h2>ログインに成功しました。</h2>
+    <a href="{% url 'ec:index' %}"><p>メイン画面へ</p></a>
+</div>
 </body>
+{% endblock %}
 </html>

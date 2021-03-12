@@ -9,6 +9,8 @@
     <title>商品一覧画面(靴)</title>
 </head>
 <body>
+<h2>- 商品一覧(靴) -</h2>
+<hr>
 <form method="get">
      {% csrf_token %}
     <p>ブランド名検索：<input name="shoe_bland_icon" value="{{ request.GET.query }}" type="text"></p>
@@ -16,6 +18,7 @@
         <input name="max_price" value="{{ request.GET.query }}" type="number">円</p>
     <button type="submit">検索</button>
 </form>
+<hr>
 <div class="productContainer">
     {% for form in shoes_list %}
     <div class="product">

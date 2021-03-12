@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/user_entry.css' %}">
+    <title>新規ユーザー登録画面</title>
+</head>
+<body>
+<h2>- 新規ユーザー登録 -</h2>
+<div class="user_entry_form">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>ユーザー名：{{ form.username }}</p>
+        {{ username_error }}
+        <p>年齢：{{ form.age }}</p>
+        <p>メールアドレス：{{ form.email }}</p>
+        <p>パスワード：{{ form.password }}</p>
+        {{ password_error }}
+        <input type="submit" value="登録">
+    </form>
+</div>
+</body>
+{% endblock %}
+</html>

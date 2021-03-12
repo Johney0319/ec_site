@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
-<html lang="ja">
 {% block content %}
+{% load static %}
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <title>ファッション通販サイト</title>
 </head>
 <body>
@@ -12,10 +14,15 @@
 <a href="{% url 'ec:product_delete' %}"><p>商品削除する</p></a>
 <hr>
 {% endif %}
-<a href="{% url 'ec:jackets_list' %}"><p>ジャケット</p></a>
-<a href="{% url 'ec:shirts_list' %}"><p>シャツ</p></a>
-<a href="{% url 'ec:pants_list' %}"><p>パンツ</p></a>
-<a href="{% url 'ec:shoes_list' %}"><p>靴</p></a>
+<div class="category">
+    <h2>- カテゴリーから探す -</h2>
+    <div class="category_obj">
+        <a href="{% url 'ec:jackets_list' %}"><p>ジャケット</p></a>
+        <a href="{% url 'ec:shirts_list' %}"><p>シャツ</p></a>
+        <a href="{% url 'ec:pants_list' %}"><p>パンツ</p></a>
+        <a href="{% url 'ec:shoes_list' %}"><p>靴</p></a>
+    </div>
+</div>
 </body>
 {% endblock %}
 </html>

@@ -1,34 +1,45 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/products_detail.css' %}">
     <title>商品詳細画面(ジャケット)</title>
 </head>
 <body>
-<table border="1">
-    <tr>
-        <th>商品ID</th>
-        <th>商品名</th>
-        <th>価格(税込)</th>
-        <th>サイズ</th>
-        <th>M or W</th>
-        <th>ブランド名</th>
-        <th>在庫数</th>
-    </tr>
-    <tr>
-        <td>{{ jackets.jacket_id }}</td>
-        <td>{{ jackets.jacket_name }}</td>
-        <td>{{ jackets.jacket_price }}</td>
-        <td>{{ jackets.jacket_size }}</td>
-        <td>{{ jackets.jacket_sex }}</td>
-        <td>{{ jackets.jacket_bland }}</td>
-        <td>{{ jackets.jacket_stock }}</td>
-    </tr>
-</table>
-<img src="{{ jackets.jacket_image.url }}" style="width:300px;height:auto">
-<a href="{% url 'ec:add_cart_jackets' jackets.id %}"><p>カートに入れる</p></a>
+<h2>- 商品詳細(ジャケット) -</h2>
+<div class="productsContainer">
+    <img class="productsObject" src="{{ jackets.jacket_image.url }}" style="width:450px;height:auto">
+    <div class="products_table">
+        <table class="productsObject" border="1">
+            <tr>
+                <th>商品ID</th>
+                <th>商品名</th>
+                <th>価格(税込)</th>
+                <th>サイズ</th>
+                <th>M or W</th>
+                <th>ブランド名</th>
+                <th>在庫数</th>
+            </tr>
+            <tr>
+                <td>{{ jackets.jacket_id }}</td>
+                <td>{{ jackets.jacket_name }}</td>
+                <td>{{ jackets.jacket_price }}</td>
+                <td>{{ jackets.jacket_size }}</td>
+                <td>{{ jackets.jacket_sex }}</td>
+                <td>{{ jackets.jacket_bland }}</td>
+                <td>{{ jackets.jacket_stock }}</td>
+            </tr>
+        </table>
+        {% if jackets.jacket_stock != '0' %}
+        <a href="{% url 'ec:add_cart_jackets' jackets.id %}"><p>カートに入れる</p></a>
+        {% else %}
+        <p>完売</p>
+        {% endif %}
+    </div>
+</div>
 </body>
 {% endblock %}
 </html>

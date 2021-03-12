@@ -6,19 +6,20 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
 </head>
 <body>
-<div class="baseContainer">
-    <div class="background-black"></div>
-    <div class="contents">
-        <a href="{% url 'ec:index' %}"><h1 class="title">ファッション通販サイト</h1></a>
-        {% if user.is_superuser %}
-        <a href="{% url 'ec:cart_list' %}"><p class="cart">カート</p></a>
-        <a href="{% url 'ec:purchase_history' %}"><p class="purchase_history">購入履歴</p></a>
-        <a href="{% url 'logout' %}"><p class="logout">ログアウト</p></a>
-        {% else %}
-        <a href="{% url 'ec:login_success' %}"><p class="login">ログイン</p></a>
-        {% endif %}
-    </div>
-</div>
+<header>
+    <a href="{% url 'ec:index' %}"><h1 class="header_obj">ファッション通販サイト</h1></a>
+    <nav class="header_nav">
+        <ui>
+            {% if user.is_authenticated %}
+            <li><a class="header_obj" href="{% url 'ec:cart_list' %}">カート</a></li>
+            <li><a class="header_obj" href="{% url 'ec:purchase_history' %}">購入履歴</a></li>
+            <li><a class="header_obj" href="{% url 'logout' %}">ログアウト</a></li>
+            {% else %}
+            <li><a class="header_obj" href="{% url 'ec:login_success' %}">ログイン</a></li>
+            {% endif %}
+        </ui>
+    </nav>
+</header>
 <hr>
 {% block content %}{% endblock %}
 </body>

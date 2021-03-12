@@ -1,0 +1,9 @@
+.category {
+  width: 100%;
+}
+
+.category_obj {
+  display: inline-block;
+  text-align: center;
+  width: 18%;
+}

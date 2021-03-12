@@ -1,34 +1,45 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
 {% block content %}
+{% load static %}
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/products_detail.css' %}">
     <title>商品詳細画面(靴)</title>
 </head>
 <body>
-<table border="1">
-    <tr>
-        <th>商品ID</th>
-        <th>商品名</th>
-        <th>価格(税込)</th>
-        <th>サイズ</th>
-        <th>M or W</th>
-        <th>ブランド名</th>
-        <th>在庫数</th>
-    </tr>
-    <tr>
-        <td>{{ shoes.shoe_id }}</td>
-        <td>{{ shoes.shoe_name }}</td>
-        <td>{{ shoes.shoe_price }}</td>
-        <td>{{ shoes.shoe_size }}</td>
-        <td>{{ shoes.shoe_sex }}</td>
-        <td>{{ shoes.shoe_bland }}</td>
-        <td>{{ shoes.shoe_stock }}</td>
-    </tr>
-</table>
-<img src="{{ shoes.shoe_image.url }}" style="width:300px;height:auto">
-<a href="{% url 'ec:add_cart_shoes' shoes.id %}"><p>カートに入れる</p></a>
+<h2>- 商品詳細(靴) -</h2>
+<div class="productsContainer">
+    <img class="productsObject" src="{{ shoes.shoe_image.url }}" style="width:450px;height:auto">
+    <div class="products_table">
+        <table class="productsObject" border="1">
+            <tr>
+                <th>商品ID</th>
+                <th>商品名</th>
+                <th>価格(税込)</th>
+                <th>サイズ</th>
+                <th>M or W</th>
+                <th>ブランド名</th>
+                <th>在庫数</th>
+            </tr>
+            <tr>
+                <td>{{ shoes.shoe_id }}</td>
+                <td>{{ shoes.shoe_name }}</td>
+                <td>{{ shoes.shoe_price }}</td>
+                <td>{{ shoes.shoe_size }}</td>
+                <td>{{ shoes.shoe_sex }}</td>
+                <td>{{ shoes.shoe_bland }}</td>
+                <td>{{ shoes.shoe_stock }}</td>
+            </tr>
+        </table>
+        {% if shoes.shoe_stock != '0' %}
+        <a href="{% url 'ec:add_cart_shoes' shoes.id %}"><p>カートに入れる</p></a>
+        {% else %}
+        <p>完売</p>
+        {% endif %}
+    </div>
+</div>
 </body>
 {% endblock %}
 </html>
