@@ -11,6 +11,7 @@
     <nav class="header_nav">
         <ui>
             {% if user.is_authenticated %}
+            <li><a class="header_obj">{{ user.username }}</a></li>
             <li><a class="header_obj" href="{% url 'ec:cart_list' %}">カート</a></li>
             <li><a class="header_obj" href="{% url 'ec:purchase_history' %}">購入履歴</a></li>
             <li><a class="header_obj" href="{% url 'logout' %}">ログアウト</a></li>

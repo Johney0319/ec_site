@@ -1,0 +1,16 @@
+.cartContainer {
+  overflow: hidden
+}
+
+.cartObject {
+  float: left;
+}
+
+.cart_table {
+  display: flex;
+  flex-direction: column;
+}
+
+td, p {
+  text-align: center;
+}

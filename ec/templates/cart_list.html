@@ -1,47 +1,52 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
-<html lang="ja">
-{% load static %}
 {% block content %}
+{% load static %}
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/cart_list.css' %}">
     <title>カート内一覧表示画面</title>
 </head>
 <body>
+<h2>- カート -</h2>
+<hr>
 {% if cartItem_list is not None %}
 {% for form in cartItem_list %}
-<table border="1">
-    <tr>
-        <th>ユーザー名</th>
-        <th>商品ID</th>
-        <th>商品名</th>
-        <th>価格(税込)</th>
-        <th>サイズ</th>
-        <th>M or W</th>
-        <th>ブランド名</th>
-        <th></th>
-        <th>購入個数</th>
-    </tr>
-    <tr>
-        <td>{{ form.cart.cart_id }}</td>
-        <td>{{ form.jackets.jacket_id }} {{ form.shirts.shirt_id }} {{ form.pants.pant_id }} {{ form.shoes.shoe_id }}</td>
-        <td>{{ form.jackets.jacket_name }} {{ form.shirts.shirt_name }} {{ form.pants.pant_name }} {{ form.shoes.shoe_name }}</td>
-        <td>¥ {{ form.jackets.jacket_price }} {{ form.shirts.shirt_price }} {{ form.pants.pant_price }} {{ form.shoes.shoe_name }}</td>
-        <td>{{ form.jackets.jacket_size }} {{ form.shirts.shirt_size }} {{ form.pants.pant_size }} {{ form.shoes.shoe_size }}</td>
-        <td>{{ form.jackets.jacket_sex }} {{ form.shirts.shirt_sex }} {{ form.pants.pant_sex }} {{ form.shoes.shoe_sex }}</td>
-        <td>{{ form.jackets.jacket_bland }} {{ form.shirts.shirt_bland }} {{ form.pants.pant_bland }} {{ form.shoes.shoe_bland }}</td>
-        <td></td>
-        <td><a href="{% url 'ec:update_cart' form.id %}">{{ form.quantity }}</a></td>
-        <td><a href="{% url 'ec:delete_cart' form.id %}">カートから削除</a></td>
-    </tr>
-</table>
-<img src="{{ form.jackets.jacket_image.url }}" style="width:300px;height:auto">
-<img src="{{ form.shirts.shirt_image.url }}" style="width:300px;height:auto">
-<img src="{{ form.pants.pant_image.url }}" style="width:300px;height:auto">
-<img src="{{ form.shoes.shoe_image.url }}" style="width:300px;height:auto">
+<div class="cartContainer">
+    <img class="cartObject" src="{{ form.jackets.jacket_image.url }}" style="width:300px;height:auto">
+    <img class="cartObject" src="{{ form.shirts.shirt_image.url }}" style="width:300px;height:auto">
+    <img class="cartObject" src="{{ form.pants.pant_image.url }}" style="width:300px;height:auto">
+    <img class="cartObject" src="{{ form.shoes.shoe_image.url }}" style="width:300px;height:auto">
+    <div class="cart_table">
+        <table class="cartObject" border="1">
+            <tr>
+                <th>商品ID</th>
+                <th>商品名</th>
+                <th>価格(税込)</th>
+                <th>サイズ</th>
+                <th>M or W</th>
+                <th>ブランド名</th>
+                <th></th>
+                <th>購入個数</th>
+            </tr>
+            <tr>
+                <td>{{ form.jackets.jacket_id }} {{ form.shirts.shirt_id }} {{ form.pants.pant_id }} {{ form.shoes.shoe_id }}</td>
+                <td>{{ form.jackets.jacket_name }} {{ form.shirts.shirt_name }} {{ form.pants.pant_name }} {{ form.shoes.shoe_name }}</td>
+                <td>¥ {{ form.jackets.jacket_price }} {{ form.shirts.shirt_price }} {{ form.pants.pant_price }} {{ form.shoes.shoe_name }}</td>
+                <td>{{ form.jackets.jacket_size }} {{ form.shirts.shirt_size }} {{ form.pants.pant_size }} {{ form.shoes.shoe_size }}</td>
+                <td>{{ form.jackets.jacket_sex }} {{ form.shirts.shirt_sex }} {{ form.pants.pant_sex }} {{ form.shoes.shoe_sex }}</td>
+                <td>{{ form.jackets.jacket_bland }} {{ form.shirts.shirt_bland }} {{ form.pants.pant_bland }} {{ form.shoes.shoe_bland }}</td>
+                <td></td>
+                <td><a href="{% url 'ec:update_cart' form.id %}">{{ form.quantity }}</a></td>
+            </tr>
+        </table>
+        <a href="{% url 'ec:delete_cart' form.id %}"><p>カートから削除</p></a>
+    </div>
+</div>
 <hr>
 {% endfor %}
-<a href="{% url 'ec:purchase' %}">レジへ進む</a>
+<a href="{% url 'ec:purchase_confirm' %}">レジへ進む</a>
 
 {% elif cartItem_list is None and cart_list_form is None %}
 <p>カートの中に商品は入っていません。</p>

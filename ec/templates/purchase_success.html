@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/purchase_success.css' %}">
+    <title>購入成功画面</title>
+</head>
+<body>
+<h2>ご購入ありがとうございました！</h2>
+<a href="{% url 'ec:index' %}"><p>メイン画面に戻る</p></a>
+</body>
+{% endblock %}
+</html>

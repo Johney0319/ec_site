@@ -59,15 +59,17 @@ class CartListView(ListView):
     model = Cart
     template_name = "cart_list.html"
     context_object_name = 'cart_list'
-    cart_all = None
 
     def get_context_data(self, **kwargs):
+        cart_all = []
         cartItem_list = super(CartListView, self).get_context_data(**kwargs)
 
-        if len(cartItem_list['object_list']) == 0:
+        for cart in CartItem.objects.all():
+            if cart.cart.cart_id == str(self.request.user):
+                cart_all.append(cart)
+
+        if len(cart_all) == 0:
             cart_all = None
-        else:
-            cart_all = CartItem.objects.all()
 
         cartItem_list.update({
             'cartItem_list': cart_all
@@ -115,9 +117,6 @@ def add_cart(request, id):
                     cart_jacket_duplicate.save()
 
                     return redirect('ec:cart_list')
-
-                else:
-                    return redirect('ec:index')
 
     elif 'shirts' in str(pre_path):
         shirts = get_object_or_404(Shirts, id=id)
@@ -273,68 +272,91 @@ def update_cart(request, id):
 
     return render(request, 'cart_list.html', params)
 
-# 購入機能用
-@login_required
-def purchase(request):
+# 購入確認機能用
+def purchase_confirm(request):
     cart_all = CartItem.objects.all()
     purchase_price_sum = []
 
     for cart in cart_all:
-        if cart.jackets is not None:
-            # 購入価格合計
-            cart_jackets_sum = int(cart.jackets.jacket_price) * int(cart.quantity)
-            purchase_price_sum.append(cart_jackets_sum)
+        if cart.cart.cart_id == str(request.user):
+            if cart.jackets is not None:
+                # 購入価格合計
+                cart_jackets_sum = int(cart.jackets.jacket_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_jackets_sum)
 
-            # 購入対象商品の在庫の再計算
-            jackets = get_object_or_404(Jackets, jacket_id=cart.jackets.jacket_id)
-            jackets.jacket_stock = int(jackets.jacket_stock) - int(cart.quantity)
-            jackets.save()
+            elif cart.shirts is not None:
+                # 購入価格合計
+                cart_shirts_sum = int(cart.shirts.shirt_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_shirts_sum)
 
-        elif cart.shirts is not None:
-            # 購入価格合計
-            cart_shirts_sum = int(cart.shirts.shirt_price) * int(cart.quantity)
-            purchase_price_sum.append(cart_shirts_sum)
+            elif cart.pants is not None:
+                # 購入価格合計
+                cart_pants_sum = int(cart.pants.pant_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_pants_sum)
 
-            # 購入対象商品の在庫の再計算
-            shirts = get_object_or_404(Shirts, shirt_id=cart.shirts.shirt_id)
-            shirts.shirt_stock = int(shirts.shirt_stock) - int(cart.quantity)
-            shirts.save()
-
-        elif cart.pants is not None:
-            # 購入価格合計
-            cart_pants_sum = int(cart.pants.pant_price) * int(cart.quantity)
-            purchase_price_sum.append(cart_pants_sum)
-
-            # 購入対象商品の在庫の再計算
-            pants = get_object_or_404(Pants, pant_id=cart.pants.pant_id)
-            pants.pant_stock = int(pants.pant_stock) - int(cart.quantity)
-            pants.save()
-
-        elif cart.shoes is not None:
-            # 購入価格合計
-            cart_shoes_sum = int(cart.shoes.shoe_price) * int(cart.quantity)
-            purchase_price_sum.append(cart_shoes_sum)
-
-            # 購入対象商品の在庫の再計算
-            shoes = get_object_or_404(Shoes, shoe_id=cart.shoes.shoe_id)
-            shoes.shoe_stock = int(shoes.shoe_stock) - int(cart.quantity)
-            shoes.save()
+            elif cart.shoes is not None:
+                # 購入価格合計
+                cart_shoes_sum = int(cart.shoes.shoe_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_shoes_sum)
 
     params = {
         'purchase_price_sum': sum(purchase_price_sum),
         'purchase_price_sum_tax': math.floor(sum(purchase_price_sum) * 0.1),
-        'cart_all': cart_all
+        'cart_all': zip(cart_all, purchase_price_sum),
     }
 
-    return render(request, 'purchase.html', params)
+    return render(request, 'purchase_confirm.html', params)
 
-# 購入履歴機能用
+# 購入機能用
 @login_required
-def purchase_history(request):
-    cartItem_all = CartItem.objects.all()
+def purchase(request):
+    cart_all = CartItem.objects.all()
     date_now = datetime.datetime.now()
+    purchase_price_sum = []
 
-    for item in cartItem_all:
+    for cart in cart_all:
+        if cart.cart.cart_id == str(request.user):
+            if cart.jackets is not None:
+                # 購入価格合計
+                cart_jackets_sum = int(cart.jackets.jacket_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_jackets_sum)
+
+                # 購入対象商品の在庫の再計算
+                jackets = get_object_or_404(Jackets, jacket_id=cart.jackets.jacket_id)
+                jackets.jacket_stock = int(jackets.jacket_stock) - int(cart.quantity)
+                jackets.save()
+
+            elif cart.shirts is not None:
+                # 購入価格合計
+                cart_shirts_sum = int(cart.shirts.shirt_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_shirts_sum)
+
+                # 購入対象商品の在庫の再計算
+                shirts = get_object_or_404(Shirts, shirt_id=cart.shirts.shirt_id)
+                shirts.shirt_stock = int(shirts.shirt_stock) - int(cart.quantity)
+                shirts.save()
+
+            elif cart.pants is not None:
+                # 購入価格合計
+                cart_pants_sum = int(cart.pants.pant_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_pants_sum)
+
+                # 購入対象商品の在庫の再計算
+                pants = get_object_or_404(Pants, pant_id=cart.pants.pant_id)
+                pants.pant_stock = int(pants.pant_stock) - int(cart.quantity)
+                pants.save()
+
+            elif cart.shoes is not None:
+                # 購入価格合計
+                cart_shoes_sum = int(cart.shoes.shoe_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_shoes_sum)
+
+                # 購入対象商品の在庫の再計算
+                shoes = get_object_or_404(Shoes, shoe_id=cart.shoes.shoe_id)
+                shoes.shoe_stock = int(shoes.shoe_stock) - int(cart.quantity)
+                shoes.save()
+
+    for item in cart_all:
         purchase_user = item.cart.cart_id
         quantity = item.quantity
 
@@ -348,13 +370,30 @@ def purchase_history(request):
             shoes_history=item.shoes
         )
 
-    purchase_history_all = PurchaseHistory.objects.all()
-
     Cart.objects.all().delete()
     CartItem.objects.all().delete()
 
     params = {
-        'purchase_history': purchase_history_all
+        'purchase_price_sum': sum(purchase_price_sum),
+        'purchase_price_sum_tax': math.floor(sum(purchase_price_sum) * 0.1),
+        'cart_all': zip(cart_all, purchase_price_sum),
+    }
+
+    return render(request, 'purchase_success.html', params)
+
+# 購入履歴機能用
+@login_required
+def purchase_history(request):
+    purchase_history_all = PurchaseHistory.objects.all()
+    purchase_history_user = []
+
+    for history in purchase_history_all:
+        if history.purchase_user == str(request.user):
+            purchase_history_user.append(history)
+
+    params = {
+        'purchase_history_user': purchase_history_user,
+        'purchase_history_user_len': len(purchase_history_user)
     }
 
     return render(request, 'purchase_history.html', params)
@@ -630,6 +669,48 @@ class ShoesListView(ListView):
             shoes_list = Shoes.objects.all()
 
         return shoes_list
+
+# 商品一覧画面用(ブランド別)
+class BlandListView(ListView):
+    model = Jackets
+    template_name = "bland_list.html"
+    context_object_name = 'bland_list'
+
+    def get_context_data(self, **kwargs):
+        bland_list = super(BlandListView, self).get_context_data(**kwargs)
+
+        pre_path = self.request.get_full_path
+        bland_name = None
+
+        if 'bland_a' in str(pre_path):
+            bland_name = 'ブランドA'
+
+        elif 'bland_b' in str(pre_path):
+            bland_name = 'ブランドB'
+
+        elif 'bland_c' in str(pre_path):
+            bland_name = 'ブランドC'
+
+        elif 'bland_d' in str(pre_path):
+            bland_name = 'ブランドD'
+
+        bland_jackets = Jackets.objects.filter(jacket_bland=bland_name)
+        bland_shirts = Shirts.objects.filter(shirt_bland=bland_name)
+        bland_pants = Pants.objects.filter(pant_bland=bland_name)
+        bland_shoes = Shoes.objects.filter(shoe_bland=bland_name)
+
+        bland_list.update({
+            'bland_list_jackets': bland_jackets,
+            'bland_list_shirts': bland_shirts,
+            'bland_list_pants': bland_pants,
+            'bland_list_shoes': bland_shoes,
+            'bland_name': bland_name
+        })
+
+        return bland_list
+
+    def get_queryset(self):
+        return Jackets.objects.all()
 
 ### 商品詳細画面用 ###
 # ジャケット

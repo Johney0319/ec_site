@@ -1,12 +1,10 @@
-from datetime import datetime
-
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 class Jackets(models.Model):
     jacket_id = models.CharField(max_length=10)
     jacket_name = models.CharField(max_length=20)
-    jacket_price = models.CharField(max_length=10)
+    jacket_price = models.IntegerField()
     jacket_size = models.CharField(max_length=2)
     jacket_sex = models.CharField(max_length=5)
     jacket_bland = models.CharField(max_length=30)
@@ -16,7 +14,7 @@ class Jackets(models.Model):
 class Shirts(models.Model):
     shirt_id = models.CharField(max_length=10)
     shirt_name = models.CharField(max_length=20)
-    shirt_price = models.CharField(max_length=10)
+    shirt_price = models.IntegerField()
     shirt_size = models.CharField(max_length=2)
     shirt_sex = models.CharField(max_length=5)
     shirt_bland = models.CharField(max_length=30)
@@ -26,7 +24,7 @@ class Shirts(models.Model):
 class Pants(models.Model):
     pant_id = models.CharField(max_length=10)
     pant_name = models.CharField(max_length=20)
-    pant_price = models.CharField(max_length=10)
+    pant_price = models.IntegerField()
     pant_size = models.CharField(max_length=2)
     pant_sex = models.CharField(max_length=5)
     pant_bland = models.CharField(max_length=30)
@@ -36,7 +34,7 @@ class Pants(models.Model):
 class Shoes(models.Model):
     shoe_id = models.CharField(max_length=10)
     shoe_name = models.CharField(max_length=20)
-    shoe_price = models.CharField(max_length=10)
+    shoe_price = models.IntegerField()
     shoe_size = models.CharField(max_length=2)
     shoe_sex = models.CharField(max_length=5)
     shoe_bland = models.CharField(max_length=30)

@@ -1,0 +1,16 @@
+.purchaseContainer {
+  overflow: hidden
+}
+
+.purchaseObject {
+  float: left;
+}
+
+.purchase_table {
+  display: flex;
+  flex-direction: column;
+}
+
+td, p {
+  text-align: center;
+}

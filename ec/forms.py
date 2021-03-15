@@ -18,19 +18,15 @@ SIZE_CHOICES = (
 )
 
 BLAND_CHOICES = (
-    ('クロクロ', 'クロクロ'),
-    ('SARA', 'SARA'),
-    ('UNITED JAPAN', 'UNITED JAPAN'),
-    ('HAGE', 'HAGE'),
-    ('PACOSTE', 'PACOSTE'),
-    ('SZUDIOUS', 'SZUDIOUS'),
-    ('Grocky Monkey', 'Grocky Monkey'),
-    ('IDONM', 'IDONM'),
+    ('ブランドA', 'ブランドA'),
+    ('ブランドB', 'ブランドB'),
+    ('ブランドC', 'ブランドC'),
+    ('ブランドD', 'ブランドD'),
 )
 
 class JacketsForm(forms.Form):
     jacket_name = forms.CharField(max_length=20)
-    jacket_price = forms.CharField(max_length=10)
+    jacket_price = forms.IntegerField()
     jacket_size = forms.ChoiceField(
         choices=SIZE_CHOICES,
         widget=forms.RadioSelect,
@@ -49,7 +45,7 @@ class JacketsForm(forms.Form):
 
 class ShirtsForm(forms.Form):
     shirt_name = forms.CharField(max_length=20)
-    shirt_price = forms.CharField(max_length=10)
+    shirt_price = forms.IntegerField()
     shirt_size = forms.ChoiceField(
         choices=SIZE_CHOICES,
         widget=forms.RadioSelect,
@@ -68,7 +64,7 @@ class ShirtsForm(forms.Form):
 
 class PantsForm(forms.Form):
     pant_name = forms.CharField(max_length=20)
-    pant_price = forms.CharField(max_length=10)
+    pant_price = forms.IntegerField()
     pant_size = forms.ChoiceField(
         choices=SIZE_CHOICES,
         widget=forms.RadioSelect,
@@ -87,7 +83,7 @@ class PantsForm(forms.Form):
 
 class ShoesForm(forms.Form):
     shoe_name = forms.CharField(max_length=20)
-    shoe_price = forms.CharField(max_length=10)
+    shoe_price = forms.IntegerField()
     shoe_size = forms.ChoiceField(
         choices=SIZE_CHOICES,
         widget=forms.RadioSelect,
@@ -109,7 +105,8 @@ class CartListForm(forms.Form):
 
 class SignUpForm(forms.ModelForm):
     password = forms.CharField(max_length=50, widget=forms.PasswordInput())
+    age = forms.IntegerField()
 
     class Meta:
         model = CustomUser
-        fields = ['username', 'email', 'age', 'password']
+        fields = ['username', 'age', 'password']

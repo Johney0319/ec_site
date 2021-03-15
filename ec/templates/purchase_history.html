@@ -1,14 +1,19 @@
 <!DOCTYPE html>
 {% extends 'base.html' %}
-<html lang="ja">
 {% block content %}
+{% load static %}
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="{% static 'css/purchase_history.css' %}">
     <title>購入履歴画面</title>
 </head>
 <body>
-{% for purchase in purchase_history %}
-<table border="1">
+<h2>- 購入履歴 -</h2>
+<hr>
+{% if purchase_history_user_len != 0 %}
+{% for purchase in purchase_history_user %}
+<table class="productsObject" border="1">
     <tr>
         <th>ユーザー名</th>
         <th>商品ID</th>
@@ -74,9 +79,12 @@
 <img src="{{ purchase.shirts_history.shirt_image.url }}" style="width:300px;height:auto">
 <img src="{{ purchase.pants_history.pant_image.url }}" style="width:300px;height:auto">
 <img src="{{ purchase.shoes_history.shoe_image.url }}" style="width:300px;height:auto">
-<p>{{ purchase.date_added }}</p>
+<p>購入日付：{{ purchase.date_added }}</p>
 <hr>
 {% endfor %}
+{% else %}
+<p>購入履歴はありません。</p>
+{% endif %}
 </body>
 {% endblock %}
 </html>
