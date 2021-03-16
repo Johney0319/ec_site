@@ -75,10 +75,10 @@
     </tr>
     {% endif %}
 </table>
-<img src="{{ purchase.jackets_history.jacket_image.url }}" style="width:300px;height:auto">
-<img src="{{ purchase.shirts_history.shirt_image.url }}" style="width:300px;height:auto">
-<img src="{{ purchase.pants_history.pant_image.url }}" style="width:300px;height:auto">
-<img src="{{ purchase.shoes_history.shoe_image.url }}" style="width:300px;height:auto">
+<img src="{{ purchase.jackets_history.jacket_image.url }}" alt="ジャケット画像" style="width:300px;height:auto">
+<img src="{{ purchase.shirts_history.shirt_image.url }}" 　alt="シャツ画像" style="width:300px;height:auto">
+<img src="{{ purchase.pants_history.pant_image.url }}" alt="パンツ画像" style="width:300px;height:auto">
+<img src="{{ purchase.shoes_history.shoe_image.url }}" alt="靴画像" style="width:300px;height:auto">
 <p>購入日付：{{ purchase.date_added }}</p>
 <hr>
 {% endfor %}

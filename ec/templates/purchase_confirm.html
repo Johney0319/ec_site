@@ -17,10 +17,10 @@
 <hr>
 {% for cart in cart_all %}
 <div class="purchaseContainer">
-    <img class="purchaseObject" src="{{ cart.0.jackets.jacket_image.url }}" style="width:300px;height:auto">
-    <img class="purchaseObject" src="{{ cart.0.shirts.shirt_image.url }}" style="width:300px;height:auto">
-    <img class="purchaseObject" src="{{ cart.0.pants.pant_image.url }}" style="width:300px;height:auto">
-    <img class="purchaseObject" src="{{ cart.0.shoes.shoe_image.url }}" style="width:300px;height:auto">
+    <img class="purchaseObject" src="{{ cart.0.jackets.jacket_image.url }}" alt="ジャケット画像" style="width:300px;height:auto">
+    <img class="purchaseObject" src="{{ cart.0.shirts.shirt_image.url }}" alt="シャツ画像" style="width:300px;height:auto">
+    <img class="purchaseObject" src="{{ cart.0.pants.pant_image.url }}" alt="パンツ画像" style="width:300px;height:auto">
+    <img class="purchaseObject" src="{{ cart.0.shoes.shoe_image.url }}" alt="靴画像" style="width:300px;height:auto">
     <div class="purchase_table">
         <table class="purchaseObject" border="1">
             <tr>

@@ -22,7 +22,7 @@
 <div class="productContainer">
     {% for form in pants_list %}
     <div class="product">
-        <a href="{% url 'ec:pants_detail' form.pk %}"><img src="{{ form.pant_image.url }}" style="width:300px;height:300px"></a>
+        <a href="{% url 'ec:pants_detail' form.pk %}"><img src="{{ form.pant_image.url }}" alt="パンツ画像" style="width:300px;height:300px"></a>
         <p class="productBland">{{ form.pant_bland }}</p>
         <p class="productPrice">¥ {{ form.pant_price }}</p>
     </div>
