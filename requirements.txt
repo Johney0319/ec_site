@@ -1,7 +1,7 @@
-ec_site
-ec
-manage.py
-db.sqlite3
-requirements.txt
-Procfile
-runtime.txt
+Django==3.1.5
+django-heroku==0.3.1
+django-mathfilters==1.0.0
+gunicorn==20.0.4
+pipenv==2020.11.15
+psycopg2==2.8.6
+whitenoise==5.2.0
