@@ -8,6 +8,7 @@ from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, TemplateView
 from .forms import JacketsForm, ShirtsForm, PantsForm, ShoesForm, CartListForm, SignUpForm
 from .models import Jackets, Shirts, Pants, Shoes, CustomUser, Cart, CartItem, PurchaseHistory
+import logging
 
 # メイン画面用
 class IndexView(TemplateView):
@@ -395,6 +396,8 @@ def purchase_history(request):
         'purchase_history_user': purchase_history_user,
         'purchase_history_user_len': len(purchase_history_user)
     }
+
+    logging.DEBUG('--------------------------------', purchase_history_user)
 
     return render(request, 'purchase_history.html', params)
 
