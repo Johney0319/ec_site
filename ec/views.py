@@ -425,7 +425,7 @@ def product_entry(request):
         model.jacket_stock = jackets_form.cleaned_data['jacket_stock']
         #model.jacket_image = jackets_form.cleaned_data['jacket_image']
 
-        model.jacket_image = 'static/images/サンフルシャケット1.jpg'
+        model.jacket_image = 'static/images/サンフルシャケット2.jpg'
 
 
         Jackets.objects.create(
