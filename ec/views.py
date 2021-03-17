@@ -397,8 +397,6 @@ def purchase_history(request):
         'purchase_history_user_len': len(purchase_history_user)
     }
 
-    logging.DEBUG(purchase_history_user)
-
     return render(request, 'purchase_history.html', params)
 
 # 商品登録画面用
