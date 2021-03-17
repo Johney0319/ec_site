@@ -547,7 +547,7 @@ class JacketsListView(ListView):
 
     def get_queryset(self):
         q_jacket_bland = self.request.GET.get('jacket_bland_icon')
-        q_min_price = self.reques:wqt.GET.get('min_price')
+        q_min_price = self.request.GET.get('min_price')
         q_max_price = self.request.GET.get('max_price')
 
         # ブランド名(完全一致)と価格範囲検索
