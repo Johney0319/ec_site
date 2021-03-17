@@ -423,9 +423,9 @@ def product_entry(request):
         model.jacket_sex = jackets_form.cleaned_data['jacket_sex']
         model.jacket_bland = jackets_form.cleaned_data['jacket_bland']
         model.jacket_stock = jackets_form.cleaned_data['jacket_stock']
-        model.jacket_image = jackets_form.cleaned_data['jacket_image']
+        #model.jacket_image = jackets_form.cleaned_data['jacket_image']
 
-        print(jackets_form.cleaned_data['jacket_image'])
+        model.jacket_image = 'static/images/サンフルシャツ1.jpg'
 
         Jackets.objects.create(
             jacket_id=int(jacket_id_max_list[0]) + 1,
