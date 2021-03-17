@@ -425,6 +425,8 @@ def product_entry(request):
         model.jacket_stock = jackets_form.cleaned_data['jacket_stock']
         model.jacket_image = jackets_form.cleaned_data['jacket_image']
 
+        print(jackets_form.cleaned_data['jacket_image'])
+
         Jackets.objects.create(
             jacket_id=int(jacket_id_max_list[0]) + 1,
             jacket_name=model.jacket_name,
