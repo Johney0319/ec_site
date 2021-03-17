@@ -427,6 +427,7 @@ def product_entry(request):
 
         model.jacket_image = 'static/images/サンフルシャツ1.jpg'
 
+
         Jackets.objects.create(
             jacket_id=int(jacket_id_max_list[0]) + 1,
             jacket_name=model.jacket_name,
