@@ -14,10 +14,10 @@
 {% if cartItem_list is not None %}
 {% for form in cartItem_list %}
 <div class="cartContainer">
-    <img class="cartObject" src="{{ form.jackets.jacket_image.url }}" alt="ジャケット画像" style="width:300px;height:auto">
-    <img class="cartObject" src="{{ form.shirts.shirt_image.url }}" alt="シャツ画像" style="width:300px;height:auto">
-    <img class="cartObject" src="{{ form.pants.pant_image.url }}" alt="パンツ画像" style="width:300px;height:auto">
-    <img class="cartObject" src="{{ form.shoes.shoe_image.url }}" alt="靴画像" style="width:300px;height:auto">
+    <img class="cartObject" src="{{ form.jackets.jacket_image.url }}" style="width:300px;height:auto">
+    <img class="cartObject" src="{{ form.shirts.shirt_image.url }}" style="width:300px;height:auto">
+    <img class="cartObject" src="{{ form.pants.pant_image.url }}" style="width:300px;height:auto">
+    <img class="cartObject" src="{{ form.shoes.shoe_image.url }}" style="width:300px;height:auto">
     <div class="cart_table">
         <table class="cartObject" border="1">
             <tr>
