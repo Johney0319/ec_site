@@ -11,16 +11,18 @@
 <body>
 <h2>- 購入確認 -</h2>
 <hr>
-<p>合計：¥ {{ purchase_price_sum }} (税込)</p>
-<p>(消費税額：¥ {{ purchase_price_sum_tax }})</p>
-<a href="{% url 'ec:purchase' %}"><p>購入する</p></a>
+<div class="purchase_div">
+    <p>合計：¥ {{ purchase_price_sum }} (税込)</p>
+    <p>(消費税額：¥ {{ purchase_price_sum_tax }})</p>
+    <a class="purchase" href="{% url 'ec:purchase' %}">購入する</a>
+</div>
 <hr>
 {% for cart in cart_all %}
 <div class="purchaseContainer">
-    <img class="purchaseObject" src="{{ cart.0.jackets.jacket_image.url }}" alt="ジャケット画像" style="width:300px;height:auto">
-    <img class="purchaseObject" src="{{ cart.0.shirts.shirt_image.url }}" alt="シャツ画像" style="width:300px;height:auto">
-    <img class="purchaseObject" src="{{ cart.0.pants.pant_image.url }}" alt="パンツ画像" style="width:300px;height:auto">
-    <img class="purchaseObject" src="{{ cart.0.shoes.shoe_image.url }}" alt="靴画像" style="width:300px;height:auto">
+    <img class="purchaseObject" src="{{ cart.0.jackets.jacket_image.url }}" style="width:300px;height:auto">
+    <img class="purchaseObject" src="{{ cart.0.shirts.shirt_image.url }}" style="width:300px;height:auto">
+    <img class="purchaseObject" src="{{ cart.0.pants.pant_image.url }}" style="width:300px;height:auto">
+    <img class="purchaseObject" src="{{ cart.0.shoes.shoe_image.url }}" style="width:300px;height:auto">
     <div class="purchase_table">
         <table class="purchaseObject" border="1">
             <tr>

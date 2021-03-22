@@ -33,6 +33,8 @@
                 <td>{{ shoes.shoe_stock }}</td>
             </tr>
         </table>
+    </div>
+    <div class="cart_entry">
         {% if shoes.shoe_stock != '0' %}
         <a href="{% url 'ec:add_cart_shoes' shoes.id %}"><p>カートに入れる</p></a>
         {% else %}

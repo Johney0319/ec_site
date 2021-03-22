@@ -33,8 +33,11 @@
                 <td>{{ jackets.jacket_stock }}</td>
             </tr>
         </table>
+    </div>
+    <br>
+    <div class="cart_entry">
         {% if jackets.jacket_stock != '0' %}
-        <a href="{% url 'ec:add_cart_jackets' jackets.id %}"><p>カートに入れる</p></a>
+        <a class="cart_entry_link" href="{% url 'ec:add_cart_jackets' jackets.id %}"><p>カートに入れる</p></a>
         {% else %}
         <p>完売</p>
         {% endif %}

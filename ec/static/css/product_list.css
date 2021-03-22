@@ -4,9 +4,14 @@
 
 .product {
   float: left;
+  margin-right: 10px;
 }
 
 .productBland {
+  margin-left: 100px;
+}
+
+.productSize {
   margin-left: 100px;
 }
 

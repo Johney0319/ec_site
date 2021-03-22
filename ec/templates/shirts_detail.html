@@ -10,6 +10,8 @@
 </head>
 <body>
 <h2>- 商品詳細(シャツ) -</h2>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
 <div class="productsContainer">
     <img class="productsObject" src="{{ shirts.shirt_image.url }}" alt="シャツ画像" style="width:450px;height:auto">
     <div class="products_table">
@@ -33,13 +35,17 @@
                 <td>{{ shirts.shirt_stock }}</td>
             </tr>
         </table>
+    </div>
+    <br>
+    <div class="cart_entry">
         {% if shirts.shirt_stock != '0' %}
-        <a href="{% url 'ec:add_cart_shirts' shirts.id %}"><p>カートに入れる</p></a>
+        <a class="cart_entry_link" href="{% url 'ec:add_cart_shirts' shirts.id %}"><p>カートに入れる</p></a>
         {% else %}
         <p>完売</p>
         {% endif %}
     </div>
 </div>
+</form>
 </body>
 {% endblock %}
 </html>

@@ -11,6 +11,20 @@
   flex-direction: column;
 }
 
+.purchase {
+  color: white;
+  background: #0099FF;
+  padding: 10px 30px;
+  display: inline-block;
+  border-radius: 5px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.purchase_div {
+  text-align: center;
+}
+
 td, p {
   text-align: center;
 }

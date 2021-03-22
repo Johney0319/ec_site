@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.core import validators
+from django.core.validators import MinValueValidator
 from django.forms import ModelForm
 
 from .models import CustomUser
@@ -62,6 +64,11 @@ class ShirtsForm(forms.Form):
     shirt_stock = forms.CharField(max_length=3)
     shirt_image = forms.ImageField()
 
+class QuantityForm(forms.Form):
+    product_quantity = forms.IntegerField(
+        initial=1
+    )
+
 class PantsForm(forms.Form):
     pant_name = forms.CharField(max_length=20)
     pant_price = forms.IntegerField()
@@ -101,7 +108,9 @@ class ShoesForm(forms.Form):
     shoe_image = forms.ImageField()
 
 class CartListForm(forms.Form):
-    purchase_num = forms.CharField(max_length=3)
+    purchase_num = forms.IntegerField(
+        initial=1
+    )
 
 class SignUpForm(forms.ModelForm):
     password = forms.CharField(max_length=50, widget=forms.PasswordInput())

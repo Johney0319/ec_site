@@ -6,6 +6,19 @@
   float: left;
 }
 
+.cart_entry {
+  float: right;
+}
+
+.cart_entry_link {
+  color: white;
+  background: #0099FF;
+  padding: 2px 30px;
+  display: inline-block;
+  border-radius: 5px;
+  text-decoration: none;
+}
+
 .products_table {
   display: flex;
   flex-direction: column;
