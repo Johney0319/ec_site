@@ -1,8 +1,9 @@
 import datetime
 import math
 import re
+import numpy as np
 from django.contrib.auth.decorators import login_required
-from django.db.models import Max, Q
+from django.db.models import Max, Q, Count
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import generic
@@ -16,6 +17,84 @@ import logging
 # メイン画面用
 class IndexView(TemplateView):
     template_name = 'index.html'
+
+    def get(self, request, **kwargs):
+        purchase_history = PurchaseHistory.objects.all()
+        product_name_size_dict = {}
+        product_sales_info = [[] for i in range(len(purchase_history))]
+        #product_sales_info_sorted = []
+        product_sales_info_sorted_model = []
+
+        for purchase in purchase_history:
+            if purchase.jackets_history is not None:
+
+                product_name_size_dict[purchase.jackets_history.jacket_name] = purchase.jackets_history.jacket_size
+
+            elif purchase.shirts_history is not None:
+
+                product_name_size_dict[purchase.shirts_history.shirt_name] = purchase.shirts_history.shirt_size
+
+            elif purchase.pants_history is not None:
+
+                product_name_size_dict[purchase.pants_history.pant_name] = purchase.pants_history.pant_size
+
+            elif purchase.shoes_history is not None:
+
+                product_name_size_dict[purchase.shoes_history.shoe_name] = purchase.shoes_history.shoe_size
+
+        i = 0
+        for name, size in product_name_size_dict.items():
+            jackets_filter = PurchaseHistory.objects.filter(jackets_history__jacket_name=name, jackets_history__jacket_size=size)
+            shirts_filter = PurchaseHistory.objects.filter(shirts_history__shirt_name=name, shirts_history__shirt_size=size)
+            pants_filter = PurchaseHistory.objects.filter(pants_history__pant_name=name, pants_history__pant_size=size)
+            shoes_filter = PurchaseHistory.objects.filter(shoes_history__shoe_name=name, shoes_history__shoe_size=size)
+
+            product_sales_info[i].append(name)
+            product_sales_info[i].append(size)
+
+            if len(jackets_filter) != 0:
+                # 売上個数と売上金額の計算
+                product_sales_info[i].append([j.quantity for j in jackets_filter][0])
+                product_sales_info[i].append([j.jackets_history.jacket_price for j in jackets_filter][0] * [j.quantity for j in jackets_filter][0])
+
+            elif len(shirts_filter) != 0:
+                # 売上個数と売上金額の計算
+                product_sales_info[i].append([s.quantity for s in shirts_filter][0])
+                product_sales_info[i].append([s.shirts_history.shirt_price for s in shirts_filter][0] * [s.quantity for s in shirts_filter][0])
+
+            elif len(pants_filter) != 0:
+                # 売上個数と売上金額の計算
+                product_sales_info[i].append([p.quantity for p in pants_filter][0])
+                product_sales_info[i].append([p.pants_history.pant_price for p in pants_filter][0] * [p.quantity for p in pants_filter][0])
+
+            elif len(shoes_filter) != 0:
+                # 売上個数と売上金額の計算
+                product_sales_info[i].append([s.quantity for s in shoes_filter][0])
+                product_sales_info[i].append([s.shoes_history.shoe_price for s in shoes_filter][0] * [s.quantity for s in shoes_filter][0])
+
+            i = i + 1
+
+        product_sales_info_sorted = sorted(product_sales_info, reverse=True, key=lambda x: x[3])
+
+        for info in product_sales_info_sorted:
+
+            if len(Jackets.objects.filter(jacket_name=info[0], jacket_size=info[1])) != 0:
+                product_sales_info_sorted_model.append(Jackets.objects.filter(jacket_name=info[0], jacket_size=info[1]))
+
+            elif len(Shirts.objects.filter(shirt_name=info[0], shirt_size=info[1])) != 0:
+                product_sales_info_sorted_model.append(Shirts.objects.filter(shirt_name=info[0], shirt_size=info[1]))
+
+            elif len(Pants.objects.filter(pant_name=info[0], pant_size=info[1])) != 0:
+                product_sales_info_sorted_model.append(Pants.objects.filter(pant_name=info[0], pant_size=info[1]))
+
+            elif len(Shoes.objects.filter(shoe_name=info[0], shoe_size=info[1])) != 0:
+                product_sales_info_sorted_model.append(Shoes.objects.filter(shoe_name=info[0], shoe_size=info[1]))
+
+        params = {
+            'product_sales_info_sorted_model': product_sales_info_sorted_model[:5]
+        }
+
+        return render(self.request, 'index.html', params)
 
 # ユーザー新規登録用
 class UserCreateView(CreateView):
@@ -135,6 +214,12 @@ def add_cart(request, id):
         pants = get_object_or_404(Pants, id=id)
         pants.save()
 
+        # カート内に該当商品が存在していた場合、何もせずにカート一覧にリダイレクト
+        cart_product = CartItem.objects.all()
+        for i in range(len(cart_product)):
+            if cart_product[i].pants is not None:
+                return redirect('ec:cart_list')
+
         # カート内に該当商品が存在しており、かつ、在庫数-購入個数 >= 1 であれば、購入個数を1増やす
         #cart_product = CartItem.objects.all()
         #for i in range(len(cart_product)):
@@ -151,6 +236,12 @@ def add_cart(request, id):
     elif 'shoes' in str(pre_path):
         shoes = get_object_or_404(Shoes, id=id)
         shoes.save()
+
+        # カート内に該当商品が存在していた場合、何もせずにカート一覧にリダイレクト
+        cart_product = CartItem.objects.all()
+        for i in range(len(cart_product)):
+            if cart_product[i].shoes is not None:
+                return redirect('ec:cart_list')
 
         # カート内に該当商品が存在しており、かつ、在庫数-購入個数 >= 1 であれば、購入個数を1増やす
         #cart_product = CartItem.objects.all()
@@ -421,8 +512,8 @@ def product_entry(request):
         model.jacket_sex = jackets_form.cleaned_data['jacket_sex']
         model.jacket_bland = jackets_form.cleaned_data['jacket_bland']
         model.jacket_stock = jackets_form.cleaned_data['jacket_stock']
-        model.jacket_image = jackets_form.cleaned_data['jacket_image']
-        #model.jacket_image = 'static/images/サンフルシャケット1.jpg'
+        #model.jacket_image = jackets_form.cleaned_data['jacket_image']
+        model.jacket_image = 'static/images/サンフルシャケット4.jpg'
 
         Jackets.objects.create(
             jacket_id=int(jacket_id_max_list[0]) + 1,
@@ -453,8 +544,8 @@ def product_entry(request):
         model.shirt_sex = shirts_form.cleaned_data['shirt_sex']
         model.shirt_bland = shirts_form.cleaned_data['shirt_bland']
         model.shirt_stock = shirts_form.cleaned_data['shirt_stock']
-        #model.shirt_image = shirts_form.cleaned_data['shirt_image']
-        model.shirt_image = 'static/images/サンフルシャツ1.jpg'
+        model.shirt_image = shirts_form.cleaned_data['shirt_image']
+        #model.shirt_image = 'static/images/サンフルシャツ2.jpg'
 
         Shirts.objects.create(
             shirt_id=int(shirt_id_max_list[0]) + 1,
@@ -481,17 +572,18 @@ def product_entry(request):
 
         model.pant_name = pants_form.cleaned_data['pant_name']
         model.pant_price = pants_form.cleaned_data['pant_price']
-        #model.pant_size = pants_form.cleaned_data['pant_size']
+        model.pant_size = pants_form.cleaned_data['pant_size']
         model.pant_sex = pants_form.cleaned_data['pant_sex']
         model.pant_bland = pants_form.cleaned_data['pant_bland']
         model.pant_stock = pants_form.cleaned_data['pant_stock']
-        model.pant_image = pants_form.cleaned_data['pant_image']
+        #model.pant_image = pants_form.cleaned_data['pant_image']
+        model.pant_image = 'static/images/サンフルハンツ1.jpg'
 
         Pants.objects.create(
             pant_id=int(pant_id_max_list[0]) + 1,
             pant_name=model.pant_name,
             pant_price=round(int(model.pant_price) * 1.10),
-            #pant_size=model.pant_size,
+            pant_size=model.pant_size,
             pant_sex=model.pant_sex,
             pant_bland=model.pant_bland,
             pant_stock=model.pant_stock,

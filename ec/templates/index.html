@@ -5,7 +5,6 @@
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
-    <meta name="robots" content="noindex">
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
     <title>ファッション通販サイト</title>
 </head>
@@ -16,22 +15,45 @@
 <hr>
 {% endif %}
 <div class="category">
-    <h2>- カテゴリーから探す -</h2>
     <div class="category_obj">
+        <h2>- カテゴリーから探す -</h2>
         <a href="{% url 'ec:jackets_list' %}"><p>ジャケット</p></a>
         <a href="{% url 'ec:shirts_list' %}"><p>シャツ</p></a>
         <a href="{% url 'ec:pants_list' %}"><p>パンツ</p></a>
         <a href="{% url 'ec:shoes_list' %}"><p>靴</p></a>
     </div>
-</div>
-<div>
-    <h2>- ブランドから探す -</h2>
     <div class="category_obj">
+        <h2>- ブランドから探す -</h2>
         <a href="{% url 'ec:bland_a_list' %}"><p>ブランドA</p></a>
         <a href="{% url 'ec:bland_b_list' %}"><p>ブランドB</p></a>
         <a href="{% url 'ec:bland_c_list' %}"><p>ブランドC</p></a>
         <a href="{% url 'ec:bland_d_list' %}"><p>ブランドD</p></a>
     </div>
+</div>
+<div class="rankingContainer">
+    <h2>👑 売上数ランキング 👑</h2>
+    {% for product in product_sales_info_sorted_model %}
+    <div class="ranking">
+    <p>{{ forloop.counter }}位</p>
+    {% if product.0.jacket_name is not None %}
+    <a href="{% url 'ec:jackets_detail' product.0.pk %}"><img src="{{ product.0.jacket_image.url }}" border="1" color="black" style="width:250px;height:250px"></a>
+    <p>{{ product.values.0.jacket_name }}</p>
+
+    {% elif product.0.shirt_name is not None %}
+    <a href="{% url 'ec:shirts_detail' product.0.pk %}"><img src="{{ product.0.shirt_image.url }}" border="1" color="black" style="width:250px;height:250px"></a>
+    <p>{{ product.values.0.shirt_name }}</p>
+
+    {% elif product.0.pant_name is not None %}
+    <a href="{% url 'ec:pants_detail' product.0.pk %}"><img src="{{ product.0.pant_image.url }}" border="1" color="black" style="width:250px;height:250px"></a>
+    <p>{{ product.values.0.pant_name }}</p>
+
+    {% elif product.0.shoe_name is not None %}
+    <a href="{% url 'ec:shoes_detail' product.0.pk %}"><img src="{{ product.0.shoe_image.url }}" border="1" color="black" style="width:250px;height:250px"></a>
+    <p>{{ product.values.0.shoe_name }}</p>
+
+    {% endif %}
+    </div>
+    {% endfor %}
 </div>
 </body>
 {% endblock %}

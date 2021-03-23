@@ -1,9 +1,24 @@
+.categoryContainer {
+  overflow: hidden;
+}
+
 .category {
   width: 100%;
+  overflow: hidden;
 }
 
 .category_obj {
   display: inline-block;
   text-align: center;
   width: 18%;
+  margin-right: 300px;
+}
+
+.rankingContainer {
+  overflow: hidden;
+}
+
+.ranking {
+  float: left;
+  margin-right: 10px;
 }
