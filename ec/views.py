@@ -1,7 +1,6 @@
 import datetime
 import math
 import re
-import numpy as np
 from django.contrib.auth.decorators import login_required
 from django.db.models import Max, Q, Count
 from django.shortcuts import render, redirect, get_object_or_404
