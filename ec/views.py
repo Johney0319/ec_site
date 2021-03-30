@@ -22,7 +22,6 @@ class IndexView(TemplateView):
         purchase_history = PurchaseHistory.objects.all()
         product_name_size_dict = {}
         product_sales_info = [[] for i in range(len(purchase_history))]
-        #product_sales_info_sorted = []
         product_sales_info_sorted_model = []
 
         for purchase in purchase_history:
@@ -73,6 +72,8 @@ class IndexView(TemplateView):
                 product_sales_info[i].append([s.shoes_history.shoe_price for s in shoes_filter][0] * [s.quantity for s in shoes_filter][0])
 
             i = i + 1
+
+        product_sales_info.remove([])
 
         product_sales_info_sorted = sorted(product_sales_info, reverse=True, key=lambda x: x[3])
 
@@ -515,11 +516,14 @@ def purchase(request):
                 shoes.shoe_stock = int(shoes.shoe_stock) - int(cart.quantity)
                 shoes.save()
 
+    purchase_history_info = PurchaseHistory.objects.all()
+
     for item in cart_all:
         purchase_user = item.cart.cart_id
         quantity = item.quantity
 
         PurchaseHistory.objects.create(
+            purchase_id=1000 + len(purchase_history_info),
             purchase_user=purchase_user,
             date_added=date_now,
             quantity=quantity,
