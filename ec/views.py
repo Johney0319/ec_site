@@ -73,10 +73,7 @@ class IndexView(TemplateView):
 
             i = i + 1
 
-        if [] in product_sales_info:
-            product_sales_info.remove([])
-
-        product_sales_info_sorted = sorted(product_sales_info, reverse=True, key=lambda x: x[2])
+        product_sales_info_sorted = sorted([info for info in product_sales_info if len(info) != 0], reverse=True, key=lambda x: x[2])
 
         for info in product_sales_info_sorted:
 
@@ -534,7 +531,8 @@ def purchase(request):
             shoes_history=item.shoes
         )
 
-        print(purchase_history_info.purchase_id)
+        for purchase in purchase_history_info:
+            print(purchase.purchase_id)
 
     Cart.objects.all().delete()
     CartItem.objects.all().delete()
