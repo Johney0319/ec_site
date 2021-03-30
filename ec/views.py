@@ -1,6 +1,8 @@
 import datetime
 import math
 import re
+from collections import defaultdict
+
 from django.contrib.auth.decorators import login_required
 from django.db.models import Max, Q, Count
 from django.shortcuts import render, redirect, get_object_or_404
@@ -514,14 +516,14 @@ def purchase(request):
                 shoes.shoe_stock = int(shoes.shoe_stock) - int(cart.quantity)
                 shoes.save()
 
-    purchase_history_info = PurchaseHistory.objects.all()
+    purchase_history_len = len(PurchaseHistory.objects.all())
 
     for item in cart_all:
         purchase_user = item.cart.cart_id
         quantity = item.quantity
 
         PurchaseHistory.objects.create(
-            purchase_id=1000 + len(purchase_history_info),
+            purchase_id=1000 + purchase_history_len,
             purchase_user=purchase_user,
             date_added=date_now,
             quantity=quantity,
@@ -530,9 +532,6 @@ def purchase(request):
             pants_history=item.pants,
             shoes_history=item.shoes
         )
-
-        for purchase in purchase_history_info:
-            print(purchase.purchase_id)
 
     Cart.objects.all().delete()
     CartItem.objects.all().delete()
@@ -550,14 +549,22 @@ def purchase(request):
 def purchase_history(request):
     purchase_history_all = PurchaseHistory.objects.all()
     purchase_history_user = []
+    purchase_history_dict = defaultdict(list)
 
     for history in purchase_history_all:
         if history.purchase_user == str(request.user):
             purchase_history_user.append(history)
 
+    # 購入番号ごとにグループ分け
+    purchase_history_info = PurchaseHistory.objects.all()
+
+    for purchase in purchase_history_info:
+        purchase_history_dict[purchase.purchase_id].append(purchase)
+
     params = {
         'purchase_history_user': purchase_history_user,
-        'purchase_history_user_len': len(purchase_history_user)
+        'purchase_history_user_len': len(purchase_history_user),
+        'purchase_history_dict': purchase_history_dict.items()
     }
 
     return render(request, 'purchase_history.html', params)
