@@ -12,7 +12,10 @@
 <h2>- 購入履歴 -</h2>
 <hr>
 {% if purchase_history_user_len != 0 %}
-{% for purchase in purchase_history_user %}
+{% for key, value in purchase_history_dict %}
+<p>購入番号：{{ key }} (購入日付：{{ value.0.date_added }})</p>
+<p>合計金額：¥ {{ value.0.purchase_sum }}</p>
+{% for v in value %}
 <table class="productsObject" border="1">
     <tr>
         <th>商品ID</th>
@@ -24,57 +27,57 @@
         <th></th>
         <th>購入個数</th>
     </tr>
-    {% if purchase.jackets_history is not None %}
+    {% if v.jackets_history is not None %}
     <tr>
-        <td>{{ purchase.jackets_history.jacket_id }}</td>
-        <td>{{ purchase.jackets_history.jacket_name }}</td>
-        <td>{{ purchase.jackets_history.jacket_price }}</td>
-        <td>{{ purchase.jackets_history.jacket_size }}</td>
-        <td>{{ purchase.jackets_history.jacket_sex }}</td>
-        <td>{{ purchase.jackets_history.jacket_bland }}</td>
+        <td>{{ v.jackets_history.jacket_id }}</td>
+        <td>{{ v.jackets_history.jacket_name }}</td>
+        <td>{{ v.jackets_history.jacket_price }}</td>
+        <td>{{ v.jackets_history.jacket_size }}</td>
+        <td>{{ v.jackets_history.jacket_sex }}</td>
+        <td>{{ v.jackets_history.jacket_bland }}</td>
         <td></td>
-        <td>{{ purchase.quantity }}</td>
+        <td>{{ v.quantity }}</td>
     </tr>
-    {% elif purchase.shirts_history is not None %}
+    {% elif v.shirts_history is not None %}
     <tr>
-        <td>{{ purchase.shirts_history.shirt_id }}</td>
-        <td>{{ purchase.shirts_history.shirt_name }}</td>
-        <td>{{ purchase.shirts_history.shirt_price }}</td>
-        <td>{{ purchase.shirts_history.shirt_size }}</td>
-        <td>{{ purchase.shirts_history.shirt_sex }}</td>
-        <td>{{ purchase.shirts_history.shirt_bland }}</td>
+        <td>{{ v.shirts_history.shirt_id }}</td>
+        <td>{{ v.shirts_history.shirt_name }}</td>
+        <td>{{ v.shirts_history.shirt_price }}</td>
+        <td>{{ v.shirts_history.shirt_size }}</td>
+        <td>{{ v.shirts_history.shirt_sex }}</td>
+        <td>{{ v.shirts_history.shirt_bland }}</td>
         <td></td>
-        <td>{{ purchase.quantity }}</td>
+        <td>{{ v.quantity }}</td>
     </tr>
-    {% elif purchase.pants_history is not None %}
+    {% elif v.pants_history is not None %}
     <tr>
-        <td>{{ purchase.pants_history.pant_id }}</td>
-        <td>{{ purchase.pants_history.pant_name }}</td>
-        <td>{{ purchase.pants_history.pant_price }}</td>
-        <td>{{ purchase.pants_history.pant_size }}</td>
-        <td>{{ purchase.pants_history.pant_sex }}</td>
-        <td>{{ purchase.pants_history.pant_bland }}</td>
+        <td>{{ v.pants_history.pant_id }}</td>
+        <td>{{ v.pants_history.pant_name }}</td>
+        <td>{{ v.pants_history.pant_price }}</td>
+        <td>{{ v.pants_history.pant_size }}</td>
+        <td>{{ v.pants_history.pant_sex }}</td>
+        <td>{{ v.pants_history.pant_bland }}</td>
         <td></td>
-        <td>{{ purchase.quantity }}</td>
+        <td>{{ v.quantity }}</td>
     </tr>
     {% elif purchase.shoes_history is not None %}
     <tr>
-        <td>{{ purchase.shoes_history.shoe_id }}</td>
-        <td>{{ purchase.shoes_history.shoe_name }}</td>
-        <td>{{ purchase.shoes_history.shoe_price }}</td>
-        <td>{{ purchase.shoes_history.shoe_size }}</td>
-        <td>{{ purchase.shoes_history.shoe_sex }}</td>
-        <td>{{ purchase.shoes_history.shoe_bland }}</td>
+        <td>{{ v.shoes_history.shoe_id }}</td>
+        <td>{{ v.shoes_history.shoe_name }}</td>
+        <td>{{ v.shoes_history.shoe_price }}</td>
+        <td>{{ v.shoes_history.shoe_size }}</td>
+        <td>{{ v.shoes_history.shoe_sex }}</td>
+        <td>{{ v.shoes_history.shoe_bland }}</td>
         <td></td>
-        <td>{{ purchase.quantity }}</td>
+        <td>{{ v.quantity }}</td>
     </tr>
     {% endif %}
 </table>
-<img src="{{ purchase.jackets_history.jacket_image.url }}" style="width:300px;height:auto">
-<img src="{{ purchase.shirts_history.shirt_image.url }}" style="width:300px;height:auto">
-<img src="{{ purchase.pants_history.pant_image.url }}" style="width:300px;height:auto">
-<img src="{{ purchase.shoes_history.shoe_image.url }}" style="width:300px;height:auto">
-<p>購入日付：{{ purchase.date_added }}</p>
+<img src="{{ v.jackets_history.jacket_image.url }}" style="width:300px;height:auto">
+<img src="{{ v.shirts_history.shirt_image.url }}" style="width:300px;height:auto">
+<img src="{{ v.pants_history.pant_image.url }}" style="width:300px;height:auto">
+<img src="{{ v.shoes_history.shoe_image.url }}" style="width:300px;height:auto">
+{% endfor %}
 <hr>
 {% endfor %}
 {% else %}

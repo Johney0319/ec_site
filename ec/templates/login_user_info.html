@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+{% extends 'base.html' %}
+{% block content %}
+{% load static %}
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ user.username }}さんの情報表示画面</title>
+</head>
+<body>
+<h2>- {{ user.username }}さんの情報表示画面 -</h2>
+<p>ユーザー名：{{ username }}</p>
+<p>年齢：{{ age }}</p>
+<p>保有クーポン数：{{ coupon }}</p>
+</body>
+{% endblock %}
+</html>

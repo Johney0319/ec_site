@@ -43,9 +43,12 @@ class Shoes(models.Model):
 
 class CustomUser(AbstractUser):
     age = models.IntegerField(null=True)
+    coupon = models.IntegerField(default=0)
 
 class Cart(models.Model):
     cart_id = models.CharField(max_length=250, blank=True)
+    cart_sum = models.IntegerField(default=0)
+    cart_coupon = models.IntegerField(default=0)
     date_added = models.DateField(auto_now_add=True)
 
 class CartItem(models.Model):
@@ -57,9 +60,11 @@ class CartItem(models.Model):
     quantity = models.IntegerField()
 
 class PurchaseHistory(models.Model):
+    purchase_id = models.CharField(max_length=250, blank=True)
     purchase_user = models.CharField(max_length=250, blank=True)
     date_added = models.DateField(auto_now_add=True)
     quantity = models.IntegerField(default=1)
+    purchase_sum = models.IntegerField(default=0)
     jackets_history = models.ForeignKey(Jackets, on_delete=models.CASCADE, null=True)
     shirts_history = models.ForeignKey(Shirts, on_delete=models.CASCADE, null=True)
     pants_history = models.ForeignKey(Pants, on_delete=models.CASCADE, null=True)

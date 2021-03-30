@@ -12,17 +12,11 @@
 <h2>- 購入確認 -</h2>
 <hr>
 <div class="purchase_div">
-    {% if use_coupon is None %}
-    <p>合計：¥ {{ purchase_price_sum }} (税込)</p>
-    <p>(消費税額：¥ {{ purchase_price_sum_tax }})</p>
-    <p>クーポン使用枚数：0枚</p>
-    {% else %}
-    <p>合計：¥ {{ purchase_price_sum_again }} (税込)</p>
-    <p>(消費税額：¥ {{ purchase_price_sum_tax_again }})</p>
-    <p>クーポン使用枚数：{{ use_coupon }}枚</p>
-    {% endif %}
-    <a class="use_coupon" href="{% url 'ec:use_coupon' %}">クーポンを使用する</a>
-    <a class="purchase" href="{% url 'ec:purchase' %}">購入する</a>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>クーポン使用枚数：{{ coupon_form.use_coupon }}</p>
+        <input type="submit" value="クーポンを使用する">
+    </form>
 </div>
 <hr>
 {% for cart in cart_all %}

@@ -4,12 +4,13 @@ import re
 from django.contrib.auth.decorators import login_required
 from django.db.models import Max, Q, Count
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
+from django.utils.http import urlencode
 from django.views import generic
 from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
 from django.views.generic.edit import ModelFormMixin
 
-from .forms import JacketsForm, ShirtsForm, PantsForm, ShoesForm, CartListForm, SignUpForm, QuantityForm
+from .forms import JacketsForm, ShirtsForm, PantsForm, ShoesForm, CartListForm, SignUpForm, QuantityForm, CouponForm
 from .models import Jackets, Shirts, Pants, Shoes, CustomUser, Cart, CartItem, PurchaseHistory
 import logging
 
@@ -144,6 +145,18 @@ def cart_list(request):
     }
 
     return render(request, 'cart_list.html', params)
+
+# ユーザー情報表示機能
+def login_user_info(request):
+    user_info = CustomUser.objects.get(username=request.user)
+
+    params = {
+        'username': user_info.username,
+        'age': user_info.age,
+        'coupon': user_info.coupon
+    }
+
+    return render(request, 'login_user_info.html', params)
 
 # カート機能用 (削除)
 def delete_cart(request, id):
@@ -360,10 +373,65 @@ def update_cart(request, id):
 
     return render(request, 'cart_list.html', params)
 
+# クーポン機能用
+def use_coupon(request):
+    cart_all = CartItem.objects.all()
+    purchase_price_sum = []
+
+    coupon_form = CouponForm(request.POST)
+
+    for cart in cart_all:
+        if cart.cart.cart_id == str(request.user):
+            if cart.jackets is not None:
+                # 購入価格合計
+                cart_jackets_sum = int(cart.jackets.jacket_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_jackets_sum)
+
+            elif cart.shirts is not None:
+                # 購入価格合計
+                cart_shirts_sum = int(cart.shirts.shirt_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_shirts_sum)
+
+            elif cart.pants is not None:
+                # 購入価格合計
+                cart_pants_sum = int(cart.pants.pant_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_pants_sum)
+
+            elif cart.shoes is not None:
+                # 購入価格合計
+                cart_shoes_sum = int(cart.shoes.shoe_price) * int(cart.quantity)
+                purchase_price_sum.append(cart_shoes_sum)
+
+    if coupon_form.is_valid():
+        use_coupon = coupon_form.cleaned_data['use_coupon']
+
+        params = {
+            'use_coupon': use_coupon,
+            'purchase_price_sum_again': sum(purchase_price_sum) - (use_coupon * 1000),
+            'purchase_price_sum_tax_again': math.floor((sum(purchase_price_sum) - use_coupon * 1000) * 0.1)
+        }
+        redirect_url = reverse('ec:purchase_confirm')
+        parameters = urlencode(params)
+        url = f'{redirect_url}?{parameters}'
+
+        return redirect(url)
+
+    params = {
+        'cart_all': zip(cart_all, purchase_price_sum),
+        'coupon_form': coupon_form
+    }
+
+    return render(request, 'use_coupon.html', params)
+
 # 購入確認機能用
 def purchase_confirm(request):
     cart_all = CartItem.objects.all()
     purchase_price_sum = []
+
+    # クーポン使用枚数、クーポン使用後合計金額(税額含め)
+    use_coupon = request.GET.get('use_coupon')
+    purchase_price_sum_again = request.GET.get('purchase_price_sum_again')
+    purchase_price_sum_tax_again = request.GET.get('purchase_price_sum_tax_again')
 
     for cart in cart_all:
         if cart.cart.cart_id == str(request.user):
@@ -391,6 +459,9 @@ def purchase_confirm(request):
         'purchase_price_sum': sum(purchase_price_sum),
         'purchase_price_sum_tax': math.floor(sum(purchase_price_sum) * 0.1),
         'cart_all': zip(cart_all, purchase_price_sum),
+        'use_coupon': use_coupon,
+        'purchase_price_sum_again': purchase_price_sum_again,
+        'purchase_price_sum_tax_again': purchase_price_sum_tax_again
     }
 
     return render(request, 'purchase_confirm.html', params)

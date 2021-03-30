@@ -69,6 +69,11 @@ class QuantityForm(forms.Form):
         initial=1
     )
 
+class CouponForm(forms.Form):
+    use_coupon = forms.IntegerField(
+        initial=1
+    )
+
 class PantsForm(forms.Form):
     pant_name = forms.CharField(max_length=20)
     pant_price = forms.IntegerField()
