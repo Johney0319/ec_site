@@ -54,28 +54,29 @@ class IndexView(TemplateView):
             if len(jackets_filter) != 0:
                 # 売上個数と売上金額の計算
                 product_sales_info[i].append([j.quantity for j in jackets_filter][0])
-                product_sales_info[i].append([j.jackets_history.jacket_price for j in jackets_filter][0] * [j.quantity for j in jackets_filter][0])
+                #product_sales_info[i].append([j.jackets_history.jacket_price for j in jackets_filter][0] * [j.quantity for j in jackets_filter][0])
 
             elif len(shirts_filter) != 0:
                 # 売上個数と売上金額の計算
                 product_sales_info[i].append([s.quantity for s in shirts_filter][0])
-                product_sales_info[i].append([s.shirts_history.shirt_price for s in shirts_filter][0] * [s.quantity for s in shirts_filter][0])
+                #product_sales_info[i].append([s.shirts_history.shirt_price for s in shirts_filter][0] * [s.quantity for s in shirts_filter][0])
 
             elif len(pants_filter) != 0:
                 # 売上個数と売上金額の計算
                 product_sales_info[i].append([p.quantity for p in pants_filter][0])
-                product_sales_info[i].append([p.pants_history.pant_price for p in pants_filter][0] * [p.quantity for p in pants_filter][0])
+                #product_sales_info[i].append([p.pants_history.pant_price for p in pants_filter][0] * [p.quantity for p in pants_filter][0])
 
             elif len(shoes_filter) != 0:
                 # 売上個数と売上金額の計算
                 product_sales_info[i].append([s.quantity for s in shoes_filter][0])
-                product_sales_info[i].append([s.shoes_history.shoe_price for s in shoes_filter][0] * [s.quantity for s in shoes_filter][0])
+                #product_sales_info[i].append([s.shoes_history.shoe_price for s in shoes_filter][0] * [s.quantity for s in shoes_filter][0])
 
             i = i + 1
 
-        product_sales_info.remove([])
+        if [] in product_sales_info:
+            product_sales_info.remove([])
 
-        product_sales_info_sorted = sorted(product_sales_info, reverse=True, key=lambda x: x[3])
+        product_sales_info_sorted = sorted(product_sales_info, reverse=True, key=lambda x: x[2])
 
         for info in product_sales_info_sorted:
 
@@ -533,6 +534,8 @@ def purchase(request):
             shoes_history=item.shoes
         )
 
+        print(purchase_history_info.purchase_id)
+
     Cart.objects.all().delete()
     CartItem.objects.all().delete()
 
@@ -587,7 +590,7 @@ def product_entry(request):
         model.jacket_bland = jackets_form.cleaned_data['jacket_bland']
         model.jacket_stock = jackets_form.cleaned_data['jacket_stock']
         #model.jacket_image = jackets_form.cleaned_data['jacket_image']
-        model.jacket_image = 'static/images/サンフルシャケット4.jpg'
+        model.jacket_image = 'static/images/サンフルシャケット1.jpg'
 
         Jackets.objects.create(
             jacket_id=int(jacket_id_max_list[0]) + 1,
@@ -618,8 +621,8 @@ def product_entry(request):
         model.shirt_sex = shirts_form.cleaned_data['shirt_sex']
         model.shirt_bland = shirts_form.cleaned_data['shirt_bland']
         model.shirt_stock = shirts_form.cleaned_data['shirt_stock']
-        model.shirt_image = shirts_form.cleaned_data['shirt_image']
-        #model.shirt_image = 'static/images/サンフルシャツ2.jpg'
+        #model.shirt_image = shirts_form.cleaned_data['shirt_image']
+        model.shirt_image = 'static/images/サンフルシャツ1.jpg'
 
         Shirts.objects.create(
             shirt_id=int(shirt_id_max_list[0]) + 1,
@@ -678,11 +681,12 @@ def product_entry(request):
 
         model.shoe_name = shoes_form.cleaned_data['shoe_name']
         model.shoe_price = shoes_form.cleaned_data['shoe_price']
-        #model.shoe_size = shoes_form.cleaned_data['shoe_size']
+        model.shoe_size = shoes_form.cleaned_data['shoe_size']
         model.shoe_sex = shoes_form.cleaned_data['shoe_sex']
         model.shoe_bland = shoes_form.cleaned_data['shoe_bland']
         model.shoe_stock = shoes_form.cleaned_data['shoe_stock']
-        model.shoe_image = shoes_form.cleaned_data['shoe_image']
+        #model.shoe_image = shoes_form.cleaned_data['shoe_image']
+        model.shoe_image = 'static/images/サンフル靴1.jpg'
 
         Shoes.objects.create(
             shoe_id=int(shoe_id_max_list[0]) + 1,
