@@ -47,8 +47,6 @@ class CustomUser(AbstractUser):
 
 class Cart(models.Model):
     cart_id = models.CharField(max_length=250, blank=True)
-    cart_sum = models.IntegerField(default=0)
-    cart_coupon = models.IntegerField(default=0)
     date_added = models.DateField(auto_now_add=True)
 
 class CartItem(models.Model):
@@ -57,6 +55,8 @@ class CartItem(models.Model):
     pants = models.ForeignKey(Pants, on_delete=models.CASCADE, null=True)
     shoes = models.ForeignKey(Shoes, on_delete=models.CASCADE, null=True)
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, null=True)
+    cart_sum = models.IntegerField(default=0, null=True)
+    cart_coupon = models.IntegerField(default=0, null=True)
     quantity = models.IntegerField()
 
 class PurchaseHistory(models.Model):
@@ -64,7 +64,8 @@ class PurchaseHistory(models.Model):
     purchase_user = models.CharField(max_length=250, blank=True)
     date_added = models.DateField(auto_now_add=True)
     quantity = models.IntegerField(default=1)
-    purchase_sum = models.IntegerField(default=0)
+    purchase_sum = models.IntegerField(default=0, null=True)
+    use_coupon = models.IntegerField(default=0, null=True)
     jackets_history = models.ForeignKey(Jackets, on_delete=models.CASCADE, null=True)
     shirts_history = models.ForeignKey(Shirts, on_delete=models.CASCADE, null=True)
     pants_history = models.ForeignKey(Pants, on_delete=models.CASCADE, null=True)

@@ -456,6 +456,25 @@ def purchase_confirm(request):
                 cart_shoes_sum = int(cart.shoes.shoe_price) * int(cart.quantity)
                 purchase_price_sum.append(cart_shoes_sum)
 
+    # クーポンが使われた場合、クーポン使用後の合計金額とクーポン使用枚数を登録する
+    if use_coupon != 0:
+        cartItem_info = CartItem.objects.all()
+
+        for item in cartItem_info:
+            item.cart_sum = purchase_price_sum_again
+            item.cart_coupon = use_coupon
+
+            item.save()
+
+    else:
+        cartItem_info = CartItem.objects.all()
+
+        for item in cartItem_info:
+            item.cart_sum = purchase_price_sum
+            item.cart_coupon = 0
+
+            item.save()
+
     params = {
         'purchase_price_sum': sum(purchase_price_sum),
         'purchase_price_sum_tax': math.floor(sum(purchase_price_sum) * 0.1),
@@ -527,6 +546,8 @@ def purchase(request):
             purchase_user=purchase_user,
             date_added=date_now,
             quantity=quantity,
+            purchase_sum=item.cart_sum,
+            use_coupon=item.cart_coupon,
             jackets_history=item.jackets,
             shirts_history=item.shirts,
             pants_history=item.pants,

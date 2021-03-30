@@ -15,6 +15,7 @@
 {% for key, value in purchase_history_dict %}
 <p>購入番号：{{ key }} (購入日付：{{ value.0.date_added }})</p>
 <p>合計金額：¥ {{ value.0.purchase_sum }}</p>
+<p>※ クーポン{{ value.0.use_coupon }}枚使用</p>
 {% for v in value %}
 <table class="productsObject" border="1">
     <tr>
