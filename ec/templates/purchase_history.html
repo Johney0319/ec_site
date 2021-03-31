@@ -16,10 +16,10 @@
 <p>購入番号：{{ key }} (購入日付：{{ value.0.date_added }})</p>
 
 {% if value.0.use_coupon != 0 %}
-<p>合計金額：¥ {{ value.0.purchase_sum }}</p>
+<p>支払い金額：¥ {{ value.0.purchase_sum }}</p>
 <p>※ 1000円引きクーポン{{ value.0.use_coupon }}枚使用</p>
 {% else %}
-<p>合計金額：¥ {{ value.0.purchase_sum }}</p>
+<p>支払い金額：¥ {{ value.0.purchase_sum }}</p>
 <p>※ クーポン使用なし</p>
 {% endif %}
 

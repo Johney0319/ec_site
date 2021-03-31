@@ -554,7 +554,7 @@ def purchase_history(request):
     params = {
         'purchase_history_user': purchase_history_user,
         'purchase_history_user_len': len(purchase_history_user),
-        'purchase_history_dict': purchase_history_dict.items(),
+        'purchase_history_dict': sorted(purchase_history_dict.items(), reverse=True),
     }
 
     return render(request, 'purchase_history.html', params)
