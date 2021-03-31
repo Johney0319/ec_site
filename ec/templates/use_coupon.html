@@ -15,6 +15,9 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <p>クーポン使用枚数：{{ coupon_form.use_coupon }}</p>
+        {% if 'use_coupon' in pre_url %}
+        <p>保有クーポン枚数を超えています。</p>
+        {% endif %}
         <input type="submit" value="クーポンを使用する">
     </form>
 </div>

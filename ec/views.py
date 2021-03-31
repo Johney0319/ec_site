@@ -190,19 +190,6 @@ def add_cart(request, id):
             if cart_product[i].jackets is not None:
                 return redirect('ec:cart_list')
 
-        # カート内に該当商品が存在しており、かつ、在庫数-購入個数 >= 1 であれば、購入個数を1増やす
-        #cart_product = CartItem.objects.all()
-        #for i in range(len(cart_product)):
-        #    if cart_product[i].jackets is not None:
-        #        if cart_product[i].jackets.jacket_id == jackets.jacket_id and int(jackets.jacket_stock) - int(cart_product[i].quantity) >= 1:
-        #            cart_jacket_duplicate = get_object_or_404(CartItem, jackets=jackets)
-        #            cart_jacket_duplicate_quantity = int(cart_jacket_duplicate.quantity) + 1
-        #            cart_jacket_duplicate.quantity = cart_jacket_duplicate_quantity
-
-        #            cart_jacket_duplicate.save()
-
-        #return redirect('ec:cart_list')
-
     elif 'shirts' in str(pre_path):
         shirts = get_object_or_404(Shirts, id=id)
         shirts.save()
@@ -214,15 +201,6 @@ def add_cart(request, id):
 
                 return redirect('ec:cart_list')
 
-        #        if cart_product[i].shirts.shirt_id == shirts.shirt_id and int(shirts.shirt_stock) - int(cart_product[i].quantity) >= 1:
-        #            cart_shirt_duplicate = get_object_or_404(CartItem, shirts=shirts)
-        #            cart_shirt_duplicate_quantity = int(cart_shirt_duplicate.quantity) + 1
-        #            cart_shirt_duplicate.quantity = cart_shirt_duplicate_quantity
-
-        #            cart_shirt_duplicate.save()
-
-        #return redirect('ec:cart_list')
-
     elif 'pants' in str(pre_path):
         pants = get_object_or_404(Pants, id=id)
         pants.save()
@@ -233,19 +211,6 @@ def add_cart(request, id):
             if cart_product[i].pants is not None:
                 return redirect('ec:cart_list')
 
-        # カート内に該当商品が存在しており、かつ、在庫数-購入個数 >= 1 であれば、購入個数を1増やす
-        #cart_product = CartItem.objects.all()
-        #for i in range(len(cart_product)):
-        #    if cart_product[i].pants is not None:
-        #        if cart_product[i].pants.pant_id == pants.pant_id and int(pants.pant_stock) - int(cart_product[i].quantity) >= 1:
-        #            cart_pant_duplicate = get_object_or_404(CartItem, pants=pants)
-        #            cart_pant_duplicate_quantity = int(cart_pant_duplicate.quantity) + 1
-        #            cart_pant_duplicate.quantity = cart_pant_duplicate_quantity
-
-        #            cart_pant_duplicate.save()
-
-        #return redirect('ec:cart_list')
-
     elif 'shoes' in str(pre_path):
         shoes = get_object_or_404(Shoes, id=id)
         shoes.save()
@@ -255,19 +220,6 @@ def add_cart(request, id):
         for i in range(len(cart_product)):
             if cart_product[i].shoes is not None:
                 return redirect('ec:cart_list')
-
-        # カート内に該当商品が存在しており、かつ、在庫数-購入個数 >= 1 であれば、購入個数を1増やす
-        #cart_product = CartItem.objects.all()
-        #for i in range(len(cart_product)):
-        #    if cart_product[i].shoes is not None:
-        #        if cart_product[i].shoes.shoe_id == shoes.shoe_id and int(shoes.shoe_stock) - int(cart_product[i].quantity) >= 1:
-        #            cart_shoe_duplicate = get_object_or_404(CartItem, shoes=shoes)
-        #            cart_shoe_duplicate_quantity = int(cart_shoe_duplicate.quantity) + 1
-        #            cart_shoe_duplicate.quantity = cart_shoe_duplicate_quantity
-
-        #            cart_shoe_duplicate.save()
-
-        #return redirect('ec:cart_list')
 
     cart = Cart.objects.create(
         cart_id=request.user,
@@ -377,7 +329,9 @@ def update_cart(request, id):
 # クーポン機能用
 def use_coupon(request):
     cart_all = CartItem.objects.all()
+    user_info = CustomUser.objects.get(username=request.user)
     purchase_price_sum = []
+    pre_url = request.META.get('HTTP_REFERER')
 
     coupon_form = CouponForm(request.POST)
 
@@ -406,20 +360,25 @@ def use_coupon(request):
     if coupon_form.is_valid():
         use_coupon = coupon_form.cleaned_data['use_coupon']
 
-        params = {
-            'use_coupon': use_coupon,
-            'purchase_price_sum_again': sum(purchase_price_sum) - (use_coupon * 1000),
-            'purchase_price_sum_tax_again': math.floor((sum(purchase_price_sum) - use_coupon * 1000) * 0.1)
-        }
-        redirect_url = reverse('ec:purchase_confirm')
-        parameters = urlencode(params)
-        url = f'{redirect_url}?{parameters}'
+        if use_coupon <= user_info.coupon:
+            params = {
+                'use_coupon': use_coupon,
+                'purchase_price_sum_again': sum(purchase_price_sum) - (use_coupon * 1000),
+                'purchase_price_sum_tax_again': math.floor((sum(purchase_price_sum) - use_coupon * 1000) * 0.1)
+            }
+            redirect_url = reverse('ec:purchase_confirm')
+            parameters = urlencode(params)
+            url = f'{redirect_url}?{parameters}'
 
-        return redirect(url)
+            return redirect(url)
+
+        else:
+            return redirect('ec:use_coupon')
 
     params = {
         'cart_all': zip(cart_all, purchase_price_sum),
-        'coupon_form': coupon_form
+        'coupon_form': coupon_form,
+        'pre_url': pre_url
     }
 
     return render(request, 'use_coupon.html', params)
@@ -490,8 +449,10 @@ def purchase_confirm(request):
 @login_required
 def purchase(request):
     cart_all = CartItem.objects.all()
+    user_info = CustomUser.objects.get(username=request.user)
     date_now = datetime.datetime.now()
     purchase_price_sum = []
+    cart_coupon_num = set()
 
     for cart in cart_all:
         if cart.cart.cart_id == str(request.user):
@@ -537,6 +498,7 @@ def purchase(request):
 
     purchase_history_len = len(PurchaseHistory.objects.all())
 
+    # カート情報を購入履歴として登録
     for item in cart_all:
         purchase_user = item.cart.cart_id
         quantity = item.quantity
@@ -554,6 +516,13 @@ def purchase(request):
             shoes_history=item.shoes
         )
 
+        cart_coupon_num.add(item.cart_coupon)
+
+    # 購入ユーザーの保有クーポン枚数の再計算
+    user_info.coupon = user_info.coupon - list(cart_coupon_num)[0]
+    user_info.save()
+
+    # カートの中身を全削除
     Cart.objects.all().delete()
     CartItem.objects.all().delete()
 
