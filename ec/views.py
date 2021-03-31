@@ -457,7 +457,7 @@ def purchase_confirm(request):
                 purchase_price_sum.append(cart_shoes_sum)
 
     # クーポンが使われた場合、クーポン使用後の合計金額とクーポン使用枚数を登録する
-    if use_coupon != 0:
+    if use_coupon is not None:
         cartItem_info = CartItem.objects.all()
 
         for item in cartItem_info:
@@ -470,7 +470,7 @@ def purchase_confirm(request):
         cartItem_info = CartItem.objects.all()
 
         for item in cartItem_info:
-            item.cart_sum = purchase_price_sum
+            item.cart_sum = sum(purchase_price_sum)
             item.cart_coupon = 0
 
             item.save()
@@ -585,7 +585,7 @@ def purchase_history(request):
     params = {
         'purchase_history_user': purchase_history_user,
         'purchase_history_user_len': len(purchase_history_user),
-        'purchase_history_dict': purchase_history_dict.items()
+        'purchase_history_dict': purchase_history_dict.items(),
     }
 
     return render(request, 'purchase_history.html', params)

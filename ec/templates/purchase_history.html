@@ -14,8 +14,15 @@
 {% if purchase_history_user_len != 0 %}
 {% for key, value in purchase_history_dict %}
 <p>購入番号：{{ key }} (購入日付：{{ value.0.date_added }})</p>
+
+{% if value.0.use_coupon != 0 %}
 <p>合計金額：¥ {{ value.0.purchase_sum }}</p>
-<p>※ クーポン{{ value.0.use_coupon }}枚使用</p>
+<p>※ 1000円引きクーポン{{ value.0.use_coupon }}枚使用</p>
+{% else %}
+<p>合計金額：¥ {{ value.0.purchase_sum }}</p>
+<p>※ クーポン使用なし</p>
+{% endif %}
+
 {% for v in value %}
 <table class="productsObject" border="1">
     <tr>
