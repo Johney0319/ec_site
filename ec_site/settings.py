@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'ec.apps.EcConfig',
     'mathfilters',
+    'django.contrib.humanize',
 ]
 
 MIDDLEWARE = [
@@ -122,19 +123,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
-# 画像保存先の指定
-#MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-#MEDIA_URL = '/media/'
+# 三桁カンマ区切り
+NUMBER_GROUPING = 3
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/'
-#STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATIC_URL = '/static/'
-
-# staticの読み込み
-#STATICFILES_DIRS = [
-#    os.path.join(BASE_DIR, "static"),
-#]
 
 AUTH_USER_MODEL = 'ec.CustomUser'
 
