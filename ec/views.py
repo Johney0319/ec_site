@@ -687,7 +687,7 @@ def product_entry(request):
             shoe_id=int(shoe_id_max_list[0]) + 1,
             shoe_name=model.shoe_name,
             shoe_price=round(int(model.shoe_price) * 1.10),
-            #shoe_size=model.shoe_size,
+            shoe_size=model.shoe_size,
             shoe_sex=model.shoe_sex,
             shoe_bland=model.shoe_bland,
             shoe_stock=model.shoe_stock,
@@ -806,12 +806,16 @@ class PantsListView(ListView):
 class ShoesListView(ListView):
     model = Shoes
     template_name = "shoes_list.html"
-    context_object_name = 'shoes_list'
+    context_object_name = 'product_list'
 
-    def get_queryset(self):
+    def get_context_data(self, **kwargs):
+        product_list = super(ShoesListView, self).get_context_data(**kwargs)
+
         q_shoe_bland = self.request.GET.get('shoe_bland_icon')
         q_min_price = self.request.GET.get('min_price')
         q_max_price = self.request.GET.get('max_price')
+
+        search_condition = True
 
         # ブランド名(完全一致)と価格範囲検索
         if q_shoe_bland and q_min_price and q_max_price:
@@ -831,9 +835,18 @@ class ShoesListView(ListView):
             )
 
         else:
+            search_condition = False
             shoes_list = Shoes.objects.all()
 
-        return shoes_list
+        product_list.update({
+            'shoes_list': shoes_list,
+            'search_condition': search_condition,
+        })
+
+        return product_list
+
+    def get_queryset(self):
+        return Shoes.objects.all()
 
 # 商品一覧画面用(ブランド別)
 class BlandListView(ListView):
@@ -843,9 +856,12 @@ class BlandListView(ListView):
 
     def get_context_data(self, **kwargs):
         bland_list = super(BlandListView, self).get_context_data(**kwargs)
+        q_min_price = self.request.GET.get('min_price')
+        q_max_price = self.request.GET.get('max_price')
 
         pre_path = self.request.get_full_path
         bland_name = None
+        search_condition = False
 
         if 'bland_a' in str(pre_path):
             bland_name = 'ブランドA'
@@ -864,12 +880,29 @@ class BlandListView(ListView):
         bland_pants = Pants.objects.filter(pant_bland=bland_name)
         bland_shoes = Shoes.objects.filter(shoe_bland=bland_name)
 
+        # 価格範囲検索
+        if q_min_price and q_max_price:
+            search_condition = True
+            bland_jackets = Jackets.objects.filter(
+                Q(jacket_price__range=[q_min_price, q_max_price], jacket_bland=bland_name)
+            )
+            bland_shirts = Shirts.objects.filter(
+                Q(shirt_price__range=[q_min_price, q_max_price], shirt_bland=bland_name)
+            )
+            bland_pants = Pants.objects.filter(
+                Q(pant_price__range=[q_min_price, q_max_price], pant_bland=bland_name)
+            )
+            bland_shoes = Shoes.objects.filter(
+                Q(shoe_price__range=[q_min_price, q_max_price], shoe_bland=bland_name)
+            )
+
         bland_list.update({
             'bland_list_jackets': bland_jackets,
             'bland_list_shirts': bland_shirts,
             'bland_list_pants': bland_pants,
             'bland_list_shoes': bland_shoes,
-            'bland_name': bland_name
+            'bland_name': bland_name,
+            'search_condition': search_condition,
         })
 
         return bland_list
@@ -905,8 +938,8 @@ def product_delete(request):
     if request.method == 'POST':
         #Jackets.objects.all().delete()
         #Shirts.objects.all().delete()
-        Pants.objects.all().delete()
-        #Shoes.objects.all().delete()
+        #Pants.objects.all().delete()
+        Shoes.objects.all().delete()
         Cart.objects.all().delete()
         CartItem.objects.all().delete()
         PurchaseHistory.objects.all().delete()

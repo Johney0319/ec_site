@@ -12,6 +12,17 @@
 <body>
 <h2>- 商品一覧({{ bland_name }}) -</h2>
 <hr>
+<form method="get">
+    {% csrf_token %}
+    <p>価格範囲検索：<input name="min_price" value="{{ request.GET.query }}" type="number">円 ~
+        <input name="max_price" value="{{ request.GET.query }}" type="number">円</p>
+    {% if search_condition == False %}
+    <button type="submit">検索</button>
+    {% else %}
+    <button type="submit">元に戻す</button>
+    {% endif %}
+</form>
+<hr>
 <div class="productContainer">
     <h3>- ジャケット -</h3>
     {% if bland_list_jackets.0 is not None %}
