@@ -15,9 +15,11 @@
 <div class="purchase_div">
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        <p>クーポン使用枚数：{{ coupon_form.use_coupon }}</p>
+        <p>クーポン使用枚数：{{ coupon_form.use_coupon }} (最大3枚まで)</p>
         {% if 'use_coupon' in pre_url and 'purchase_confirm' not in pre_url %}
         <p>保有クーポン枚数を超えています。</p>
+        {% elif use_coupon > 3 %}
+        <p>クーポン使用枚数は3枚以下にしてください。</p>
         {% endif %}
         <input type="submit" value="クーポンを使用する">
     </form>
@@ -45,8 +47,8 @@
             <tr>
                 <td>{{ cart.0.jackets.jacket_id }}</td>
                 <td>{{ cart.0.jackets.jacket_name }}</td>
-                <td>{{ cart.0.jackets.jacket_price }}</td>
-                <td>{{ cart.0.jackets.jacket_size|intcomma }}</td>
+                <td>{{ cart.0.jackets.jacket_price|intcomma }}</td>
+                <td>{{ cart.0.jackets.jacket_size }}</td>
                 <td>{{ cart.0.jackets.jacket_sex }}</td>
                 <td>{{ cart.0.jackets.jacket_bland }}</td>
                 <td></td>

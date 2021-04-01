@@ -185,10 +185,13 @@ def add_cart(request, id):
         jackets.save()
 
         # カート内に該当商品が存在していた場合、何もせずにカート一覧にリダイレクト
-        cart_product = CartItem.objects.all()
-        for i in range(len(cart_product)):
-            if cart_product[i].jackets is not None:
-                return redirect('ec:cart_list')
+        cart_product_info = [info.jackets for info in CartItem.objects.all()]
+        if jackets in cart_product_info:
+            return redirect('ec:cart_list')
+        #for i in range(len(cart_product)):
+        #    if cart_product[i].jackets is not None:
+        #        print(cart_product[i].jackets)
+        #        return redirect('ec:cart_list')
 
     elif 'shirts' in str(pre_path):
         shirts = get_object_or_404(Shirts, id=id)
@@ -416,7 +419,7 @@ def purchase_confirm(request):
                 purchase_price_sum.append(cart_shoes_sum)
 
     # クーポンが使われた場合、クーポン使用後の合計金額とクーポン使用枚数を登録する
-    if use_coupon is not None:
+    if use_coupon is not None and use_coupon <= 3:
         cartItem_info = CartItem.objects.all()
 
         for item in cartItem_info:
@@ -585,7 +588,7 @@ def product_entry(request):
         model.jacket_bland = jackets_form.cleaned_data['jacket_bland']
         model.jacket_stock = jackets_form.cleaned_data['jacket_stock']
         #model.jacket_image = jackets_form.cleaned_data['jacket_image']
-        model.jacket_image = 'static/images/サンフルシャケット1.jpg'
+        model.jacket_image = 'static/images/サンフルシャケット2.jpg'
 
         Jackets.objects.create(
             jacket_id=int(jacket_id_max_list[0]) + 1,

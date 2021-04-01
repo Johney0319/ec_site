@@ -22,7 +22,10 @@
     <p>(消費税額：¥ {{ purchase_price_sum_tax_again|intcomma }})</p>
     <p>クーポン使用枚数：{{ use_coupon }}枚</p>
     {% endif %}
+
+    {% if purchase_price_sum >= 5000 %}
     <a class="use_coupon" href="{% url 'ec:use_coupon' %}">クーポンを使用する</a>
+    {% endif %}
     <a class="purchase" href="{% url 'ec:purchase' %}">購入する</a>
 </div>
 <hr>
@@ -90,7 +93,7 @@
             </tr>
             {% endif %}
         </table>
-        <p>小計：¥ {{ cart.1 }}</p>
+        <p>小計：¥ {{ cart.1|intcomma }}</p>
     </div>
 </div>
 <hr>
