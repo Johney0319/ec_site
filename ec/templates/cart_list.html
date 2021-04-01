@@ -35,7 +35,7 @@
             <tr>
                 <td>{{ form.jackets.jacket_id }} {{ form.shirts.shirt_id }} {{ form.pants.pant_id }} {{ form.shoes.shoe_id }}</td>
                 <td>{{ form.jackets.jacket_name }} {{ form.shirts.shirt_name }} {{ form.pants.pant_name }} {{ form.shoes.shoe_name }}</td>
-                <td>¥ {{ form.jackets.jacket_price }} {{ form.shirts.shirt_price }} {{ form.pants.pant_price }} {{ form.shoes.shoe_price }}</td>
+                <td>¥ {{ form.jackets.jacket_price|intcomma }} {{ form.shirts.shirt_price|intcomma }} {{ form.pants.pant_price|intcomma }} {{ form.shoes.shoe_price|intcomma }}</td>
                 <td>{{ form.jackets.jacket_size }} {{ form.shirts.shirt_size }} {{ form.pants.pant_size }} {{ form.shoes.shoe_size }}</td>
                 <td>{{ form.jackets.jacket_sex }} {{ form.shirts.shirt_sex }} {{ form.pants.pant_sex }} {{ form.shoes.shoe_sex }}</td>
                 <td>{{ form.jackets.jacket_bland }} {{ form.shirts.shirt_bland }} {{ form.pants.pant_bland }} {{ form.shoes.shoe_bland }}</td>
@@ -78,7 +78,7 @@
                 <tr>
                     <td>{{ cart_list_info.jackets.jacket_id }} {{ cart_list_info.shirts.shirt_id }} {{ cart_list_info.pants.pant_id }} {{ cart_list_info.shoes.shoe_id }}</td>
                     <td>{{ cart_list_info.jackets.jacket_name }} {{ cart_list_info.shirts.shirt_name }} {{ cart_list_info.pants.pant_name }} {{ cart_list_info.shoes.shoe_name }}</td>
-                    <td>¥ {{ cart_list_info.jackets.jacket_price }} {{ cart_list_info.shirts.shirt_price }} {{ cart_list_info.pants.pant_price }} {{ cart_list_info.shoes.shoe_name }}</td>
+                    <td>¥ {{ cart_list_info.jackets.jacket_price|intcomma }} {{ cart_list_info.shirts.shirt_price|intcomma }} {{ cart_list_info.pants.pant_price|intcomma }} {{ cart_list_info.shoes.shoe_price|intcomma }}</td>
                     <td>{{ cart_list_info.jackets.jacket_size }} {{ cart_list_info.shirts.shirt_size }} {{ cart_list_info.pants.pant_size }} {{ cart_list_info.shoes.shoe_size }}</td>
                     <td>{{ cart_list_info.jackets.jacket_sex }} {{ cart_list_info.shirts.shirt_sex }} {{ cart_list_info.pants.pant_sex }} {{ cart_list_info.shoes.shoe_sex }}</td>
                     <td>{{ cart_list_info.jackets.jacket_bland }} {{ cart_list_info.shirts.shirt_bland }} {{ cart_list_info.pants.pant_bland }} {{ cart_list_info.shoes.shoe_bland }}</td>

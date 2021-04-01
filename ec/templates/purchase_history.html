@@ -17,10 +17,10 @@
 <p>購入番号：{{ key }} (購入日付：{{ value.0.date_added }})</p>
 
 {% if value.0.use_coupon != 0 %}
-<p>支払い金額：¥ {{ value.0.purchase_sum }}</p>
-<p>※ 1000円引きクーポン{{ value.0.use_coupon }}枚使用</p>
+<p>支払い金額：¥ {{ value.0.purchase_sum|intcomma }}</p>
+<p>※ 1,000円引きクーポン{{ value.0.use_coupon }}枚使用</p>
 {% else %}
-<p>支払い金額：¥ {{ value.0.purchase_sum }}</p>
+<p>支払い金額：¥ {{ value.0.purchase_sum|intcomma }}</p>
 <p>※ クーポン使用なし</p>
 {% endif %}
 
@@ -40,7 +40,7 @@
     <tr>
         <td>{{ v.jackets_history.jacket_id }}</td>
         <td>{{ v.jackets_history.jacket_name }}</td>
-        <td>{{ v.jackets_history.jacket_price }}</td>
+        <td>{{ v.jackets_history.jacket_price|intcomma }}</td>
         <td>{{ v.jackets_history.jacket_size }}</td>
         <td>{{ v.jackets_history.jacket_sex }}</td>
         <td>{{ v.jackets_history.jacket_bland }}</td>
@@ -51,7 +51,7 @@
     <tr>
         <td>{{ v.shirts_history.shirt_id }}</td>
         <td>{{ v.shirts_history.shirt_name }}</td>
-        <td>{{ v.shirts_history.shirt_price }}</td>
+        <td>{{ v.shirts_history.shirt_price|intcomma }}</td>
         <td>{{ v.shirts_history.shirt_size }}</td>
         <td>{{ v.shirts_history.shirt_sex }}</td>
         <td>{{ v.shirts_history.shirt_bland }}</td>
@@ -62,7 +62,7 @@
     <tr>
         <td>{{ v.pants_history.pant_id }}</td>
         <td>{{ v.pants_history.pant_name }}</td>
-        <td>{{ v.pants_history.pant_price }}</td>
+        <td>{{ v.pants_history.pant_price|intcomma }}</td>
         <td>{{ v.pants_history.pant_size }}</td>
         <td>{{ v.pants_history.pant_sex }}</td>
         <td>{{ v.pants_history.pant_bland }}</td>
@@ -73,7 +73,7 @@
     <tr>
         <td>{{ v.shoes_history.shoe_id }}</td>
         <td>{{ v.shoes_history.shoe_name }}</td>
-        <td>{{ v.shoes_history.shoe_price }}</td>
+        <td>{{ v.shoes_history.shoe_price|intcomma }}</td>
         <td>{{ v.shoes_history.shoe_size }}</td>
         <td>{{ v.shoes_history.shoe_sex }}</td>
         <td>{{ v.shoes_history.shoe_bland }}</td>

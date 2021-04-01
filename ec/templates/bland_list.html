@@ -17,7 +17,7 @@
     {% for jacket in bland_list_jackets %}
     <div class="product">
         <a href="{% url 'ec:jackets_detail' jacket.pk %}"><img src="{{ jacket.jacket_image.url }}" alt="ジャケット画像(クリックで詳細画面へ)" border="1" color="black" style="width:300px;height:300px"></a>
-        <p class="productPrice">¥ {{ jacket.jacket_price }}</p>
+        <p class="productPrice">¥ {{ jacket.jacket_price|intcomma }}</p>
     </div>
     {% endfor %}
 </div>
@@ -27,7 +27,7 @@
     {% for shirt in bland_list_shirts %}
     <div class="product">
         <a href="{% url 'ec:shirts_detail' shirt.pk %}"><img src="{{ shirt.shirt_image.url }}" alt="シャツ画像(クリックで詳細画面へ)" border="1" style="width:300px;height:300px"></a>
-        <p class="productPrice">¥ {{ shirt.shirt_price }}</p>
+        <p class="productPrice">¥ {{ shirt.shirt_price|intcomma }}</p>
     </div>
     {% endfor %}
 </div>
@@ -37,7 +37,7 @@
     {% for pant in bland_list_pants %}
     <div class="product">
         <a href="{% url 'ec:pants_detail' pant.pk %}"><img src="{{ pant.pant_image.url }}" alt="パンツ画像(クリックで詳細画面へ)" border="1" style="width:300px;height:300px"></a>
-        <p class="productPrice">¥ {{ pant.pant_price }}</p>
+        <p class="productPrice">¥ {{ pant.pant_price|intcomma }}</p>
     </div>
     {% endfor %}
 </div>
@@ -47,7 +47,7 @@
     {% for shoe in bland_list_shoes %}
     <div class="product">
         <a href="{% url 'ec:shoes_detail' shoe.pk %}"><img src="{{ shoe.shoe_image.url }}" alt="靴画像(クリックで詳細画面へ)" border="1" style="width:300px;height:300px"></a>
-        <p class="productPrice">¥ {{ shoe.shoe_price }}</p>
+        <p class="productPrice">¥ {{ shoe.shoe_price|intcomma }}</p>
     </div>
     {% endfor %}
 </div>
