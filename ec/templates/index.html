@@ -38,21 +38,25 @@
     {% if product.0.jacket_name is not None %}
     <a href="{% url 'ec:jackets_detail' product.0.pk %}"><img src="{{ product.0.jacket_image.url }}" border="1" color="black" style="width:250px;height:250px"></a>
     <p>{{ product.values.0.jacket_name }}</p>
+    <p>{{ product.values.0.jacket_bland }}</p>
     <p>{{ product.values.0.jacket_size }}サイズ</p>
 
     {% elif product.0.shirt_name is not None %}
     <a href="{% url 'ec:shirts_detail' product.0.pk %}"><img src="{{ product.0.shirt_image.url }}" border="1" color="black" style="width:250px;height:250px"></a>
     <p>{{ product.values.0.shirt_name }}</p>
+    <p>{{ product.values.0.shirt_bland }}</p>
     <p>{{ product.values.0.shirt_size }}サイズ</p>
 
     {% elif product.0.pant_name is not None %}
     <a href="{% url 'ec:pants_detail' product.0.pk %}"><img src="{{ product.0.pant_image.url }}" border="1" color="black" style="width:250px;height:250px"></a>
     <p>{{ product.values.0.pant_name }}</p>
+    <p>{{ product.values.0.pant_bland }}</p>
     <p>{{ product.values.0.pant_size }}サイズ</p>
 
     {% elif product.0.shoe_name is not None %}
     <a href="{% url 'ec:shoes_detail' product.0.pk %}"><img src="{{ product.0.shoe_image.url }}" border="1" color="black" style="width:250px;height:250px"></a>
     <p>{{ product.values.0.shoe_name }}</p>
+    <p>{{ product.values.0.shoe_bland }}</p>
     <p>{{ product.values.0.shoe_size }}サイズ</p>
 
     {% endif %}
