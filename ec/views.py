@@ -466,6 +466,8 @@ def purchase_confirm(request):
 @login_required
 def purchase(request):
     cart_all = CartItem.objects.all()
+
+    # ログインユーザー情報取得
     user_info = CustomUser.objects.get(username=request.user)
     date_now = datetime.datetime.now()
     purchase_price_sum = []
@@ -539,14 +541,19 @@ def purchase(request):
     user_info.coupon = user_info.coupon - list(cart_coupon_num)[0]
     user_info.save()
 
+    # 付与クーポン枚数の計算
+    # 10,000円以上の購入の場合
+    if sum(purchase_price_sum) >= 10000:
+        get_coupon_num = math.floor(sum(purchase_price_sum) / 10000)
+        user_info.coupon = user_info.coupon + get_coupon_num
+        user_info.save()
+
     # カートの中身を全削除
     Cart.objects.all().delete()
     CartItem.objects.all().delete()
 
     params = {
-        'purchase_price_sum': sum(purchase_price_sum),
-        'purchase_price_sum_tax': math.floor(sum(purchase_price_sum) * 0.1),
-        'cart_all': zip(cart_all, purchase_price_sum),
+        'get_coupon_num': get_coupon_num
     }
 
     return render(request, 'purchase_success.html', params)
