@@ -141,9 +141,20 @@ def login_success(request):
 
 # カート機能用 (一覧表示)
 def cart_list(request):
+    # ログインユーザーのカート情報取得
+    cart_info = Cart.objects.all()
+    cartItem_info = CartItem.objects.all()
+    cartItem_list = []
+
+    cart_cartItem = zip([cart.cart_id for cart in cart_info], cartItem_info)
+
+    for username, item in cart_cartItem:
+        if str(username) == str(request.user):
+            cartItem_list.append(item)
+
     params = {
-        'cartItem_list': CartItem.objects.all(),
-        'cartItem_len': len(CartItem.objects.all())
+        'cartItem_list': cartItem_list,
+        'cartItem_len': len(cartItem_list)
     }
 
     return render(request, 'cart_list.html', params)
@@ -164,6 +175,7 @@ def login_user_info(request):
 def delete_cart(request, id):
     cartItem_info = CartItem.objects.get(id=id)
 
+    cartItem_info.cart.delete()
     cartItem_info.delete()
 
     return redirect('ec:cart_list')
@@ -171,7 +183,17 @@ def delete_cart(request, id):
 # カート機能用 (追加)
 @login_required
 def add_cart(request, id):
-    model = Cart()
+    # ログインユーザーのカート情報取得
+    cart_info = Cart.objects.all()
+    cartItem_info = CartItem.objects.all()
+    cartItem_list = []
+
+    cart_cartItem = zip([cart.cart_id for cart in cart_info], cartItem_info)
+
+    for username, item in cart_cartItem:
+        if str(username) == str(request.user):
+            cartItem_list.append(item)
+
     jackets = None
     shirts = None
     pants = None
@@ -186,7 +208,7 @@ def add_cart(request, id):
         jackets.save()
 
         # カート内に該当商品が存在していた場合、何もせずにカート一覧にリダイレクト
-        cart_product_info = [info.jackets for info in CartItem.objects.all()]
+        cart_product_info = [info.jackets for info in cartItem_list]
         if jackets in cart_product_info:
             return redirect('ec:cart_list')
 
@@ -195,7 +217,7 @@ def add_cart(request, id):
         shirts.save()
 
         # カート内に該当商品が存在していた場合、何もせずにカート一覧にリダイレクト
-        cart_product_info = [info.shirts for info in CartItem.objects.all()]
+        cart_product_info = [info.shirts for info in cartItem_list]
         if shirts in cart_product_info:
             return redirect('ec:cart_list')
 
@@ -204,7 +226,7 @@ def add_cart(request, id):
         pants.save()
 
         # カート内に該当商品が存在していた場合、何もせずにカート一覧にリダイレクト
-        cart_product_info = [info.pants for info in CartItem.objects.all()]
+        cart_product_info = [info.pants for info in cartItem_list]
         if pants in cart_product_info:
             return redirect('ec:cart_list')
 
@@ -213,7 +235,7 @@ def add_cart(request, id):
         shoes.save()
 
         # カート内に該当商品が存在していた場合、何もせずにカート一覧にリダイレクト
-        cart_product_info = [info.shoes for info in CartItem.objects.all()]
+        cart_product_info = [info.shoes for info in cartItem_list]
         if shoes in cart_product_info:
             return redirect('ec:cart_list')
 
@@ -471,6 +493,9 @@ def purchase(request):
     purchase_price_sum = []
     cart_coupon_num = set()
 
+    # 付与クーポン枚数の初期値設定
+    get_coupon_num = 0
+
     for cart in cart_all:
         if cart.cart.cart_id == str(request.user):
             if cart.jackets is not None:
@@ -559,23 +584,18 @@ def purchase(request):
 # 購入履歴機能用
 @login_required
 def purchase_history(request):
-    purchase_history_all = PurchaseHistory.objects.all()
+    purchase_history_info = PurchaseHistory.objects.filter(purchase_user=request.user)
+
     purchase_history_user = []
     purchase_history_dict = defaultdict(list)
 
-    for history in purchase_history_all:
-        if history.purchase_user == str(request.user):
-            purchase_history_user.append(history)
-
     # 購入番号ごとにグループ分け
-    purchase_history_info = PurchaseHistory.objects.all()
-
     for purchase in purchase_history_info:
         purchase_history_dict[purchase.purchase_id].append(purchase)
 
     params = {
         'purchase_history_user': purchase_history_user,
-        'purchase_history_user_len': len(purchase_history_user),
+        'purchase_history_len': len(purchase_history_dict),
         'purchase_history_dict': sorted(purchase_history_dict.items(), reverse=True),
     }
 
