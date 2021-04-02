@@ -953,9 +953,9 @@ class ShoesDetailView(DetailView):
 def product_delete(request):
 
     if request.method == 'POST':
-        #Jackets.objects.all().delete()
-        #Shirts.objects.all().delete()
-        #Pants.objects.all().delete()
+        Jackets.objects.all().delete()
+        Shirts.objects.all().delete()
+        Pants.objects.all().delete()
         Shoes.objects.all().delete()
         Cart.objects.all().delete()
         CartItem.objects.all().delete()
