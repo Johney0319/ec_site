@@ -71,7 +71,8 @@ class QuantityForm(forms.Form):
 
 class CouponForm(forms.Form):
     use_coupon = forms.IntegerField(
-        initial=1
+        initial=1,
+        min_value=0
     )
 
 class PantsForm(forms.Form):
@@ -114,7 +115,8 @@ class ShoesForm(forms.Form):
 
 class CartListForm(forms.Form):
     purchase_num = forms.IntegerField(
-        initial=1
+        initial=1,
+        min_value=0
     )
 
 class SignUpForm(forms.ModelForm):

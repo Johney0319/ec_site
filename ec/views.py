@@ -249,11 +249,9 @@ def update_cart(request, id):
 
             # 変更個数が在庫数以下だったら購入個数を変更
             else:
-                #jackets_list_info.jacket_stock = int(jackets_list_info.jacket_stock) + int(cart_list_info.quantity) - int(cart_list_form.cleaned_data['purchase_num'])
                 cart_list_info.quantity = cart_list_form.cleaned_data['purchase_num']
 
                 cart_list_info.save()
-                #jackets_list_info.save()
 
                 return redirect('ec:cart_list')
 
