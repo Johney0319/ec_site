@@ -161,9 +161,9 @@ def login_user_info(request):
 
 # カート機能用 (削除)
 def delete_cart(request, id):
-    cart_list_info = CartItem.objects.get(id=id)
+    cartItem_info = CartItem.objects.get(id=id)
 
-    cart_list_info.delete()
+    cartItem_info.delete()
 
     return redirect('ec:cart_list')
 
@@ -188,41 +188,33 @@ def add_cart(request, id):
         cart_product_info = [info.jackets for info in CartItem.objects.all()]
         if jackets in cart_product_info:
             return redirect('ec:cart_list')
-        #for i in range(len(cart_product)):
-        #    if cart_product[i].jackets is not None:
-        #        print(cart_product[i].jackets)
-        #        return redirect('ec:cart_list')
 
     elif 'shirts' in str(pre_path):
         shirts = get_object_or_404(Shirts, id=id)
         shirts.save()
 
         # カート内に該当商品が存在していた場合、何もせずにカート一覧にリダイレクト
-        cart_product = CartItem.objects.all()
-        for i in range(len(cart_product)):
-            if cart_product[i].shirts is not None:
-
-                return redirect('ec:cart_list')
+        cart_product_info = [info.shirts for info in CartItem.objects.all()]
+        if shirts in cart_product_info:
+            return redirect('ec:cart_list')
 
     elif 'pants' in str(pre_path):
         pants = get_object_or_404(Pants, id=id)
         pants.save()
 
         # カート内に該当商品が存在していた場合、何もせずにカート一覧にリダイレクト
-        cart_product = CartItem.objects.all()
-        for i in range(len(cart_product)):
-            if cart_product[i].pants is not None:
-                return redirect('ec:cart_list')
+        cart_product_info = [info.pants for info in CartItem.objects.all()]
+        if pants in cart_product_info:
+            return redirect('ec:cart_list')
 
     elif 'shoes' in str(pre_path):
         shoes = get_object_or_404(Shoes, id=id)
         shoes.save()
 
         # カート内に該当商品が存在していた場合、何もせずにカート一覧にリダイレクト
-        cart_product = CartItem.objects.all()
-        for i in range(len(cart_product)):
-            if cart_product[i].shoes is not None:
-                return redirect('ec:cart_list')
+        cart_product_info = [info.shoes for info in CartItem.objects.all()]
+        if shoes in cart_product_info:
+            return redirect('ec:cart_list')
 
     cart = Cart.objects.create(
         cart_id=request.user,
@@ -323,7 +315,6 @@ def update_cart(request, id):
 
     params = {
         'cart_list_form': cart_list_form,
-        #'cartItem_list': CartItem.objects.all(),
         'cart_list_info': cart_list_info
     }
 
@@ -332,11 +323,17 @@ def update_cart(request, id):
 # クーポン機能用
 def use_coupon(request):
     cart_all = CartItem.objects.all()
+    coupon_form = CouponForm(request.POST)
+
+    # ログインユーザー情報取得
     user_info = CustomUser.objects.get(username=request.user)
+
     purchase_price_sum = []
     pre_url = request.META.get('HTTP_REFERER')
 
-    coupon_form = CouponForm(request.POST)
+    # 使用クーポン枚数と保有クーポン枚数の取得
+    use_coupon_get = request.GET.get('use_coupon')
+    use_info_coupon_get = request.GET.get('use_info_coupon')
 
     for cart in cart_all:
         if cart.cart.cart_id == str(request.user):
@@ -363,9 +360,11 @@ def use_coupon(request):
     if coupon_form.is_valid():
         use_coupon = coupon_form.cleaned_data['use_coupon']
 
-        if use_coupon <= user_info.coupon:
+        # 使用クーポン枚数が保有クーポン枚数を上回っておらず、かつ、使用クーポン枚数が3枚以下の場合に
+        # クーポン使用後の金額を計算し、購入確認画面へリダイレクト
+        if use_coupon <= user_info.coupon and int(use_coupon) <= 3:
             params = {
-                'use_coupon': use_coupon,
+                'use_coupon': int(use_coupon),
                 'purchase_price_sum_again': sum(purchase_price_sum) - (use_coupon * 1000),
                 'purchase_price_sum_tax_again': math.floor((sum(purchase_price_sum) - use_coupon * 1000) * 0.1)
             }
@@ -376,9 +375,23 @@ def use_coupon(request):
             return redirect(url)
 
         else:
-            return redirect('ec:use_coupon')
+            params = {
+                'use_coupon': int(use_coupon),
+                'use_info_coupon': int(user_info.coupon)
+            }
+
+            redirect_url = reverse('ec:use_coupon')
+            parameters = urlencode(params)
+            url = f'{redirect_url}?{parameters}'
+
+            return redirect(url)
+
+    use_coupon_get = int(use_coupon_get) if use_coupon_get is not None else 0
+    use_info_coupon_get = int(use_info_coupon_get) if use_info_coupon_get is not None else 0
 
     params = {
+        'use_coupon_get': use_coupon_get,
+        'use_info_coupon_get': use_info_coupon_get,
         'cart_all': zip(cart_all, purchase_price_sum),
         'coupon_form': coupon_form,
         'pre_url': pre_url
@@ -418,8 +431,8 @@ def purchase_confirm(request):
                 cart_shoes_sum = int(cart.shoes.shoe_price) * int(cart.quantity)
                 purchase_price_sum.append(cart_shoes_sum)
 
-    # クーポンが使われた場合、クーポン使用後の合計金額とクーポン使用枚数を登録する
-    if use_coupon is not None and use_coupon <= 3:
+    # クーポンが使われた場合(3枚以内)、クーポン使用後の合計金額とクーポン使用枚数を登録する
+    if use_coupon is not None and int(use_coupon) <= 3:
         cartItem_info = CartItem.objects.all()
 
         for item in cartItem_info:

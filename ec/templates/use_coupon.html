@@ -16,10 +16,12 @@
     <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         <p>クーポン使用枚数：{{ coupon_form.use_coupon }} (最大3枚まで)</p>
-        {% if 'use_coupon' in pre_url and 'purchase_confirm' not in pre_url %}
-        <p>保有クーポン枚数を超えています。</p>
-        {% elif use_coupon > 3 %}
+        {% if use_coupon_get is not None and use_info_coupon_get is not None %}
+        {% if use_coupon_get > 3 %}
         <p>クーポン使用枚数は3枚以下にしてください。</p>
+        {% elif 'use_coupon' in pre_url and 'purchase_confirm' not in pre_url and use_coupon_get > use_info_coupon_get %}
+        <p>保有クーポン枚数を超えています。</p>
+        {% endif %}
         {% endif %}
         <input type="submit" value="クーポンを使用する">
     </form>

@@ -17,6 +17,7 @@
     <p>合計：¥ {{ purchase_price_sum|intcomma }} (税込)</p>
     <p>(消費税額：¥ {{ purchase_price_sum_tax|intcomma }})</p>
     <p>クーポン使用枚数：0枚</p>
+    <p>(※合計金額5,000円以上で使用可能)</p>
     {% else %}
     <p>合計：¥ {{ purchase_price_sum_again|intcomma }} (税込)</p>
     <p>(消費税額：¥ {{ purchase_price_sum_tax_again|intcomma }})</p>
