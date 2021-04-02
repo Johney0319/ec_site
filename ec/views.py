@@ -97,6 +97,7 @@ class IndexView(TemplateView):
 
         return render(self.request, 'index.html', params)
 
+
 # ユーザー新規登録用
 class UserCreateView(CreateView):
     template_name = 'user_entry.html'
