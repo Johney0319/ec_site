@@ -2,19 +2,14 @@ import datetime
 import math
 import re
 from collections import defaultdict
-
 from django.contrib.auth.decorators import login_required
-from django.db.models import Max, Q, Count
+from django.db.models import Max, Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from django.utils.http import urlencode
-from django.views import generic
-from django.views.generic import ListView, DetailView, CreateView, TemplateView, UpdateView
-from django.views.generic.edit import ModelFormMixin
-
-from .forms import JacketsForm, ShirtsForm, PantsForm, ShoesForm, CartListForm, SignUpForm, QuantityForm, CouponForm
+from django.views.generic import ListView, DetailView, CreateView, TemplateView
+from .forms import JacketsForm, ShirtsForm, PantsForm, ShoesForm, CartListForm, SignUpForm, CouponForm
 from .models import Jackets, Shirts, Pants, Shoes, CustomUser, Cart, CartItem, PurchaseHistory
-import logging
 
 # メイン画面用
 class IndexView(TemplateView):
@@ -56,22 +51,18 @@ class IndexView(TemplateView):
             if len(jackets_filter) != 0:
                 # 売上個数と売上金額の計算
                 product_sales_info[i].append([j.quantity for j in jackets_filter][0])
-                #product_sales_info[i].append([j.jackets_history.jacket_price for j in jackets_filter][0] * [j.quantity for j in jackets_filter][0])
 
             elif len(shirts_filter) != 0:
                 # 売上個数と売上金額の計算
                 product_sales_info[i].append([s.quantity for s in shirts_filter][0])
-                #product_sales_info[i].append([s.shirts_history.shirt_price for s in shirts_filter][0] * [s.quantity for s in shirts_filter][0])
 
             elif len(pants_filter) != 0:
                 # 売上個数と売上金額の計算
                 product_sales_info[i].append([p.quantity for p in pants_filter][0])
-                #product_sales_info[i].append([p.pants_history.pant_price for p in pants_filter][0] * [p.quantity for p in pants_filter][0])
 
             elif len(shoes_filter) != 0:
                 # 売上個数と売上金額の計算
                 product_sales_info[i].append([s.quantity for s in shoes_filter][0])
-                #product_sales_info[i].append([s.shoes_history.shoe_price for s in shoes_filter][0] * [s.quantity for s in shoes_filter][0])
 
             i = i + 1
 
@@ -127,6 +118,7 @@ class UserCreateView(CreateView):
             return render(self.request, 'user_entry.html', params)
 
         entry_user.set_password(self.request.POST.get('password'))
+        entry_user.age = self.request.POST.get('age')
         entry_user.save()
 
         return redirect('ec:index')
