@@ -651,7 +651,7 @@ def product_entry(request):
         model.shirt_bland = shirts_form.cleaned_data['shirt_bland']
         model.shirt_stock = shirts_form.cleaned_data['shirt_stock']
         #model.shirt_image = shirts_form.cleaned_data['shirt_image']
-        model.shirt_image = 'static/images/サンフルシャツ2.jpg'
+        model.shirt_image = 'static/images/サンフルシャツ1.jpg'
 
         Shirts.objects.create(
             shirt_id=int(shirt_id_max_list[0]) + 1,
@@ -683,7 +683,7 @@ def product_entry(request):
         model.pant_bland = pants_form.cleaned_data['pant_bland']
         model.pant_stock = pants_form.cleaned_data['pant_stock']
         #model.pant_image = pants_form.cleaned_data['pant_image']
-        model.pant_image = 'static/images/サンフルハンツ2.jpg'
+        model.pant_image = 'static/images/サンフルハンツ1.jpg'
 
         Pants.objects.create(
             pant_id=int(pant_id_max_list[0]) + 1,
@@ -715,7 +715,7 @@ def product_entry(request):
         model.shoe_bland = shoes_form.cleaned_data['shoe_bland']
         model.shoe_stock = shoes_form.cleaned_data['shoe_stock']
         #model.shoe_image = shoes_form.cleaned_data['shoe_image']
-        model.shoe_image = 'static/images/サンフル靴2.jpg'
+        model.shoe_image = 'static/images/サンフル靴1.jpg'
 
         Shoes.objects.create(
             shoe_id=int(shoe_id_max_list[0]) + 1,
